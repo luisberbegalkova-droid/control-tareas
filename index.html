@@ -96,7 +96,6 @@
 </head>
 <body class="flex h-full bg-background text-on-background overflow-hidden antialiased font-sans">
 
-  <!-- MENÚ LATERAL (DESKTOP) -->
   <nav class="hidden md:flex flex-col h-full py-md px-sm border-r border-outline-variant bg-surface-container w-64 shadow-md z-20 shrink-0">
     <div class="mb-lg px-xs">
       <div class="flex items-center gap-xs mb-xs">
@@ -131,7 +130,6 @@
     </div>
   </nav>
 
-  <!-- MENÚ INFERIOR (MOBILE) -->
   <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-lowest border-t border-outline-variant z-50 flex justify-around items-center h-16 pb-safe">
     <button onclick="navegarA('pantalla-dashboard')" class="flex flex-col items-center justify-center w-full h-full text-secondary font-bold">
       <span class="material-symbols-outlined">dashboard</span>
@@ -154,9 +152,8 @@
       <span class="material-symbols-outlined text-on-surface">menu</span>
     </header>
 
-    <!-- ==================== PANTALLA 1: DASHBOARD ==================== -->
     <main id="pantalla-dashboard" class="flex-1 overflow-y-auto w-full p-margin-mobile md:p-margin-desktop space-y-md md:space-y-lg">
-      <div class="hidden md:flex justify-between items-end mb-6">
+      <div class="hidden md:flex justify-between items-end mb-4">
         <div>
           <h2 class="font-headline-lg text-headline-lg text-primary mb-1">Health Overview</h2>
           <p class="font-body-md text-body-md text-on-surface-variant">Métricas globales y detección de cuellos de botella.</p>
@@ -181,6 +178,29 @@
             <span class="material-symbols-outlined text-sm text-error">gpp_bad</span> Críticos (>14 días)
           </span>
           <div id="kpi-total-criticos" class="font-display-kpi text-display-kpi text-red-600 tabular-nums">0</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-md">
+        <div class="lg:col-span-4 kpi-card bg-surface-container-lowest rounded-xl border border-outline-variant p-md flex flex-col border-l-4 border-emerald-500">
+          <span class="font-label-bold text-label-bold text-on-surface-variant mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm text-emerald-600">bolt</span> Resolución Global Media
+          </span>
+          <div class="flex items-baseline gap-xs">
+            <div id="kpi-media-global" class="font-display-kpi text-display-kpi text-emerald-700 tabular-nums">0</div>
+            <span class="text-sm font-semibold text-stone-500">días / tarea</span>
+          </div>
+        </div>
+        <div class="lg:col-span-8 kpi-card bg-surface-container-lowest rounded-xl border border-outline-variant p-md flex flex-col">
+          <span class="font-label-bold text-label-bold text-on-surface-variant mb-3 flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm text-primary">groups</span> Eficiencia de Cierre por Mando Intermedio
+          </span>
+          <div id="contenedor-medias-mandos" class="grid grid-cols-2 sm:grid-cols-5 gap-sm flex-1 items-center">
+            <div class="text-center p-2 bg-surface-bright rounded border border-outline-variant">
+              <p class="text-xs font-bold text-stone-600 truncate">Cargando...</p>
+              <p class="text-lg font-bold text-primary">--</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -215,7 +235,6 @@
       </div>
     </main>
 
-    <!-- ==================== PANTALLA 2: KANBAN VIEW ==================== -->
     <main id="pantalla-kanban" class="hidden flex-1 flex flex-col h-full overflow-hidden w-full">
       <div class="bg-surface-container-lowest border-b border-outline-variant shadow-sm px-margin-mobile md:px-margin-desktop py-md shrink-0">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md mb-md">
@@ -242,11 +261,9 @@
         </div>
       </div>
 
-      <!-- Contenedor Scroll Columnas -->
       <div class="flex-1 overflow-x-auto overflow-y-hidden kanban-scrollbar bg-surface-bright px-margin-mobile md:px-margin-desktop py-md">
         <div class="flex gap-md h-full min-w-max items-start">
           
-          <!-- Columna: To Do -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low rounded-t-xl">
               <h3 class="font-label-bold text-on-surface uppercase tracking-wider text-xs">To Do</h3>
@@ -255,7 +272,6 @@
             <div id="col-kanban-todo" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
 
-          <!-- Columna: In Progress -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low rounded-t-xl">
               <h3 class="font-label-bold text-on-surface uppercase tracking-wider text-xs">En Proceso</h3>
@@ -264,7 +280,6 @@
             <div id="col-kanban-inprogress" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
 
-          <!-- Columna: Alerta Naranja (7-14 días) -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-[#fff7ed] rounded-t-xl">
               <h3 class="font-label-bold text-amber-800 uppercase tracking-wider text-xs">Alerta Naranja (>7d)</h3>
@@ -273,7 +288,6 @@
             <div id="col-kanban-naranja" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
 
-          <!-- Columna: Bloqueado Crítico -->
           <div class="w-72 flex flex-col h-full bg-[#fff1f2] rounded-xl border border-error-container shadow-md shrink-0">
             <div class="p-4 border-b border-error-container flex justify-between items-center bg-[#ffe4e6] rounded-t-xl">
               <h3 class="font-label-bold text-error uppercase tracking-wider text-xs font-bold">Bloqueado / Crítico</h3>
@@ -282,7 +296,6 @@
             <div id="col-kanban-roja" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
 
-          <!-- Columna: Completado / Hecho -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0 border-l-4 border-emerald-500">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-[#f0fdf4] rounded-t-xl">
               <h3 class="font-label-bold text-emerald-800 uppercase tracking-wider text-xs">Hecho / Resuelto</h3>
@@ -295,7 +308,6 @@
       </div>
     </main>
 
-    <!-- ==================== PANTALLA 3: FORMULARIO (ACTUALIZADO) ==================== -->
     <main id="pantalla-formulario" class="hidden flex-1 overflow-y-auto bg-surface-container-lowest flex justify-center py-xl px-margin-mobile md:px-margin-desktop">
       <div class="w-full max-w-2xl bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant p-lg md:p-xl h-fit">
         <div class="flex justify-between items-start mb-lg border-b border-outline-variant pb-md">
@@ -397,13 +409,16 @@
 
   </div>
 
-  <!-- ==================== CONTROLADOR CENTRAL JAVASCRIPT ==================== -->
   <script>
     const SCRIPT_DB_URL = "https://script.google.com/macros/s/AKfycbysmm4alStkd5QmLQTSXlQQPq27n2sUdbDM1GytgUi4WvfuFxnhQrxTr7eXukcfj4InBA/exec";
 
     let dataset = [];
+    let metricasResolucion = { mediaGlobal: 0, mediaPorMando: {} };
     let modoEdicion = false;
     let tareaEdicionOriginal = null;
+
+    // Lista fija de los mandos oficiales de Injusa para la visualización del Dashboard
+    const MANDOS_OFICIALES = ["José Canales", "Javier Miralles", "Patricia Berbegal", "Eduardo Herrero", "Rafael Roca"];
 
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById('task-date').value = new Date().toISOString().substring(0, 10);
@@ -442,17 +457,22 @@
       try {
         const fetchUrl = SCRIPT_DB_URL + (SCRIPT_DB_URL.includes("?") ? "&" : "?") + "_cb=" + Date.now();
         const response = await fetch(fetchUrl);
-        const datosCargados = await response.json();
+        const respuestaServidor = await response.json();
         
-        if (Array.isArray(datosCargados)) {
-          dataset = datosCargados;
+        // Manejar estructura de métricas desglosada del backend avanzado
+        if (respuestaServidor && Array.isArray(respuestaServidor.tareas)) {
+          dataset = respuestaServidor.tareas;
+          metricasResolucion = respuestaServidor.metricas || { mediaGlobal: 0, mediaPorMando: {} };
+          procesarYRenderizarTodo();
+        } else if (Array.isArray(respuestaServidor)) {
+          dataset = respuestaServidor;
           procesarYRenderizarTodo();
         } else {
-          console.warn("La API devolvió un formato inesperado. Cargando simulación local.");
+          console.warn("Formato inesperado del servidor. Cargando contingencia.");
           inyectarDatosMock();
         }
       } catch (err) {
-        console.error("Error conectando al Sheets backend, cargando simulación:", err);
+        console.error("Fallo al consultar la base de datos de Google. Cargando contingencia:", err);
         inyectarDatosMock();
       }
     }
@@ -474,6 +494,7 @@
     }
 
     function renderizarDashboardMétricas() {
+      // 1. Contadores superiores básicos (solo cuentan tareas abiertas)
       const totalActivos = dataset.filter(t => t.Estado !== 'Hecho').length;
       const totalAlertas = dataset.filter(t => t.DiasEstancado > 7 && t.DiasEstancado <= 14 && t.Estado !== 'Hecho').length;
       const totalCriticos = dataset.filter(t => t.DiasEstancado > 14 && t.Estado !== 'Hecho').length;
@@ -482,6 +503,31 @@
       document.getElementById('kpi-total-alertas').textContent = totalAlertas;
       document.getElementById('kpi-total-criticos').textContent = totalCriticos;
 
+      // 2. Pintar nueva sección de KPIs de Resolución
+      document.getElementById('kpi-media-global').textContent = metricasResolucion.mediaGlobal || 0;
+      
+      const contenedorMandos = document.getElementById('contenedor-medias-mandos');
+      contenedorMandos.innerHTML = '';
+      
+      MANDOS_OFICIALES.forEach(mando => {
+        const media = metricasResolucion.mediaPorMando[mando];
+        const tieneCierres = (media !== undefined && media !== null);
+        
+        let badgeColor = "text-emerald-600 bg-emerald-50";
+        if (media > 10) badgeColor = "text-amber-700 bg-amber-50";
+        if (media > 15) badgeColor = "text-red-700 bg-red-50";
+
+        contenedorMandos.insertAdjacentHTML('beforeend', `
+          <div class="text-center p-2 bg-surface-bright rounded border border-outline-variant overflow-hidden">
+            <p class="text-[11px] font-bold text-stone-500 truncate" title="${mando}">${mando.split(' ')[0]} ${mando.split(' ')[1] ? mando.split(' ')[1][0] + '.' : ''}</p>
+            <p class="text-base font-bold tracking-tight ${tieneCierres ? badgeColor + ' rounded px-1' : 'text-stone-400'}">
+              ${tieneCierres ? media + 'd' : '<span class="text-[10px] font-medium text-stone-400">Sin cierres</span>'}
+            </p>
+          </div>
+        `);
+      });
+
+      // 3. Gráfico de distribución por estados
       const estadosCount = { 'To Do': 0, 'En Proceso': 0, 'Bloqueado': 0, 'Hecho': 0 };
       dataset.forEach(t => {
         let est = t.Estado;
@@ -510,6 +556,7 @@
         `);
       }
 
+      // 4. Gráfico de barras por estancamiento (Solo tareas abiertas)
       const estancamientoPorMando = {};
       dataset.forEach(t => {
         if(t.Mando && t.Estado !== 'Hecho') {
@@ -536,12 +583,13 @@
         `);
       }
 
+      // 5. Tabla Top 5 Abiertas
       const tablaBody = document.getElementById('tabla-top-criticos');
       tablaBody.innerHTML = '';
       const top5 = dataset.filter(t => t.Estado !== 'Hecho').sort((a,b) => b.DiasEstancado - a.DiasEstancado).slice(0, 5);
 
       if(top5.length === 0) {
-        tablaBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-sm text-stone-400">No hay temas críticos abiertos.</td></tr>`;
+        tablaBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-sm text-stone-400">No hay temas abiertos en la lista.</td></tr>`;
       }
 
       top5.forEach(item => {
@@ -619,7 +667,9 @@
         const tarjetaHTML = `
           <div class="bg-surface-container-lowest rounded-lg border ${borderCard} p-4 shadow-sm relative overflow-hidden group">
             <div class="flex items-center justify-between gap-2 mb-2">
-              <span class="text-[11px] px-2 py-0.5 rounded-full ${badgeStyle}">${item.Estado === 'Hecho' ? 'Resuelto' : dias + ' días activo'}</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-full ${badgeStyle}">
+                ${item.Estado === 'Hecho' ? 'Resuelto en ' + (item.DiasResolucion || 0) + 'd' : dias + ' días activo'}
+              </span>
               <select onchange="cambiarEstadoTarea('${item.Tema}', this.value)" class="text-[11px] bg-white border border-outline-variant rounded px-1 py-0.5 focus:outline-none focus:ring-1 focus:ring-secondary cursor-pointer">
                 <option value="To Do" ${item.Estado === 'To Do' ? 'selected' : ''}>To Do</option>
                 <option value="En Proceso" ${item.Estado === 'En Proceso' ? 'selected' : ''}>En Proceso</option>
@@ -674,7 +724,7 @@
             estado: nuevoEstado
           })
         });
-        setTimeout(adquirirDatosDeGoogleSheets, 500);
+        setTimeout(adquirirDatosDeGoogleSheets, 600);
       } catch (err) {
         console.error("Error sincronizando estado:", err);
       }
@@ -724,40 +774,27 @@
       modoEdicion = true;
       tareaEdicionOriginal = identificadorTema;
 
-      // Rellenar formulario
       document.getElementById('task-title').value = item.Tema;
       document.getElementById('task-manager').value = item.Mando;
       
-      // Calcular la fecha original basándonos en DiasEstancado
       const dias = parseInt(item.DiasEstancado) || 0;
       const dateObj = new Date();
       dateObj.setDate(dateObj.getDate() - dias);
       document.getElementById('task-date').value = dateObj.toISOString().substring(0, 10);
 
-      // Prioridad
       const prioridadRadios = document.getElementsByName('priority');
-      prioridadRadios.forEach(radio => {
-        radio.checked = (radio.value === item.Prioridad);
-      });
+      prioridadRadios.forEach(radio => { radio.checked = (radio.value === item.Prioridad); });
 
-      // Estado
       const estadoRadios = document.getElementsByName('status');
-      estadoRadios.forEach(radio => {
-        radio.checked = (radio.value === item.Estado);
-      });
+      estadoRadios.forEach(radio => { radio.checked = (radio.value === item.Estado); });
 
-      // Razón de bloqueo
       alternarCampoBloqueo(item.Estado);
       if (item.Estado === 'Bloqueado') {
         document.getElementById('task-blocker').value = item.RazonBloqueo || '';
-      } else {
-        document.getElementById('task-blocker').value = '';
       }
 
-      // Próxima acción
       document.getElementById('task-next-step').value = item.ProximaAccion || '';
 
-      // Cambiar textos del formulario
       document.getElementById('form-titulo').textContent = "Editar Asunto / Bloqueo";
       document.getElementById('form-subtitulo').textContent = "Modifica los datos del tema seleccionado y guarda los cambios.";
       document.getElementById('btn-submit-form').textContent = "Guardar Cambios";
@@ -776,49 +813,32 @@
       const razonBloqueoVal = document.getElementById('task-blocker').value || "Ninguna";
       const proximaAccionVal = document.getElementById('task-next-step').value || "Pendiente de definir";
 
-      // Calcular DiasEstancado localmente
-      const inicioDate = new Date(fechaVal);
-      const hoy = new Date();
-      inicioDate.setHours(0,0,0,0);
-      hoy.setHours(0,0,0,0);
-      const diffTime = Math.max(0, hoy - inicioDate);
-      const diasEstancado = estadoVal === 'Hecho' ? 0 : Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
       if (modoEdicion) {
-        // 1. Actualizar primero la interfaz visual de Vercel de inmediato
+        // Actualización optimista local
         const index = dataset.findIndex(t => t.Tema === tareaEdicionOriginal);
         if (index !== -1) {
-          dataset[index] = {
-            Tema: asuntoTexto || tareaEdicionOriginal,
-            Mando: mandoVal,
-            DiasEstancado: diasEstancado,
-            Prioridad: prioridadVal,
-            Estado: estadoVal,
-            RazonBloqueo: razonBloqueoVal,
-            ProximaAccion: proximaAccionVal
-          };
+          dataset[index].Tema = asuntoTexto || tareaEdicionOriginal;
+          dataset[index].Mando = mandoVal;
+          dataset[index].Prioridad = prioridadVal;
+          dataset[index].Estado = estadoVal;
+          dataset[index].RazonBloqueo = razonBloqueoVal;
+          dataset[index].ProximaAccion = proximaAccionVal;
         }
         
         procesarYRenderizarTodo();
         navegarA('pantalla-kanban');
 
-        // 2. CONTROL DE FLUJO ESTRICTO: Sincronizar en Google Sheets secuencialmente
         try {
-          // BLOQUEO 1: Forzamos al navegador a ESPERAR (await) a que Google confirme el borrado
-          const respuestaBorrado = await fetch(SCRIPT_DB_URL, {
+          // Secuencial estricto con await para evitar colisiones
+          await fetch(SCRIPT_DB_URL, {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              action: "delete",
-              tema: tareaEdicionOriginal
-            })
+            body: JSON.stringify({ action: "delete", tema: tareaEdicionOriginal })
           });
 
-          // Pequeña pausa de seguridad de 200ms para que el servidor de Google asiente el borrado en el disco
           await new Promise(resolve => setTimeout(resolve, 200));
 
-          // BLOQUEO 2: Ahora que el viejo ya no existe, insertamos el nuevo con la fecha del 01/06/2026
           await fetch(SCRIPT_DB_URL, {
             method: "POST",
             mode: "no-cors",
@@ -835,14 +855,13 @@
             })
           });
 
-          // Refresco de tranquilidad tras 1 segundo para pintar lo que Google ha guardado de verdad
           setTimeout(adquirirDatosDeGoogleSheets, 1000);
         } catch (err) {
-          console.error("Error al actualizar la tarea en Google Sheets:", err);
+          console.error("Error al editar registro en Google Sheets:", err);
         }
 
       } else {
-        // Modo creación normal (sin cambios)
+        // Modo creación normal
         const nuevaTarea = {
           action: "create",
           tema: asuntoTexto || "Asunto sin título (" + new Date().toLocaleDateString() + ")",
@@ -857,7 +876,7 @@
         dataset.unshift({
           Tema: nuevaTarea.tema,
           Mando: nuevaTarea.mando,
-          DiasEstancado: diasEstancado,
+          DiasEstancado: 0,
           Prioridad: nuevaTarea.prioridad,
           Estado: nuevaTarea.estado,
           RazonBloqueo: nuevaTarea.razonBloqueo,
@@ -880,7 +899,6 @@
         }
       }
 
-      // Resetear estado del formulario
       document.getElementById('form-alta-tarea').reset();
       document.getElementById('task-date').value = new Date().toISOString().substring(0, 10);
       alternarCampoBloqueo('To Do');
@@ -889,12 +907,14 @@
     }
 
     function inyectarDatosMock() {
+      // Contingencia integrada adaptada para no romper la UI si la API falla de primeras
       dataset = [
-        { Tema: "Validación de muestras de materiales proveedor exterior", Mando: "Patricia Berbegal", DiasEstancado: 18, Prioridad: "Alta", Estado: "Bloqueado", RazonBloqueo: "Falta de documentación técnica aduanera.", ProximaAccion: "Llamar a la agencia de transportes el jueves." },
-        { Tema: "Ajuste de matriz en línea de ensamblaje principal", Mando: "José Canales", DiasEstancado: 9, Prioridad: "Alta", Estado: "En Proceso", RazonBloqueo: "", ProximaAccion: "Verificar tolerancias de moldes con equipo técnico." },
-        { Tema: "Actualizar previsión de compras y materiales Q3", Mando: "Eduardo Herrero", DiasEstancado: 3, Prioridad: "Media", Estado: "To Do", RazonBloqueo: "", ProximaAccion: "Consolidar reportes de stock." },
-        { Tema: "Homologación certificación ISO planta de pintado", Mando: "Javier Miralles", DiasEstancado: 22, Prioridad: "Alta", Estado: "En Proceso", RazonBloqueo: "Retenido por auditoría de riesgos de terceros.", ProximaAccion: "Escalar caso directamente con Dirección." }
+        { Tema: "Prueba Moldes 123", Mando: "Javier Miralles", DiasEstancado: 16, Prioridad: "Alta", Estado: "En Proceso", RazonBloqueo: "Ninguna", ProximaAccion: "nuevo" }
       ];
+      metricasResolucion = {
+        mediaGlobal: 12.4,
+        mediaPorMando: { "Javier Miralles": 12.4, "José Canales": 8.2 }
+      };
       procesarYRenderizarTodo();
     }
   </script>
