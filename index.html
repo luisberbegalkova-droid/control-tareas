@@ -184,13 +184,11 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-md">
         <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl border border-outline-variant p-md flex flex-col">
           <h3 class="font-headline-md text-headline-md text-primary mb-6">Estado Global</h3>
-          <div class="space-y-4" id="lista-distribucion-estados">
-            </div>
+          <div class="space-y-4" id="lista-distribucion-estados"></div>
         </div>
         <div class="lg:col-span-8 bg-surface-container-lowest rounded-xl border border-outline-variant p-md flex flex-col">
           <h3 class="font-headline-md text-headline-md text-primary mb-2">Estancamiento por Responsable</h3>
-          <div id="grafico-barras-mandos" class="flex-1 flex items-end gap-4 h-64 mt-4 relative pb-8 border-b border-surface-variant px-4">
-            </div>
+          <div id="grafico-barras-mandos" class="flex-1 flex items-end gap-4 h-64 mt-4 relative pb-8 border-b border-surface-variant px-4"></div>
         </div>
       </div>
 
@@ -208,8 +206,7 @@
                 <th class="p-4 hidden md:table-cell">Última Nota / Bloqueo</th>
               </tr>
             </thead>
-            <tbody id="tabla-top-criticos" class="divide-y divide-surface-variant bg-surface-container-lowest font-body-md text-body-md">
-              </tbody>
+            <tbody id="tabla-top-criticos" class="divide-y divide-surface-variant bg-surface-container-lowest font-body-md text-body-md"></tbody>
           </table>
         </div>
       </div>
@@ -241,11 +238,9 @@
         </div>
       </div>
 
-      <!-- Contenedor Scroll Columnas (Actualizado a 5 columnas) -->
       <div class="flex-1 overflow-x-auto overflow-y-hidden kanban-scrollbar bg-surface-bright px-margin-mobile md:px-margin-desktop py-md">
         <div class="flex gap-md h-full min-w-max items-start">
           
-          <!-- Columna: To Do -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low rounded-t-xl">
               <h3 class="font-label-bold text-on-surface uppercase tracking-wider text-xs">To Do</h3>
@@ -254,7 +249,6 @@
             <div id="col-kanban-todo" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
 
-          <!-- Columna: In Progress -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low rounded-t-xl">
               <h3 class="font-label-bold text-on-surface uppercase tracking-wider text-xs">En Proceso</h3>
@@ -263,7 +257,6 @@
             <div id="col-kanban-inprogress" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
 
-          <!-- Columna: Alerta Naranja (7-14 días) -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-[#fff7ed] rounded-t-xl">
               <h3 class="font-label-bold text-amber-800 uppercase tracking-wider text-xs">Alerta Naranja (>7d)</h3>
@@ -272,7 +265,6 @@
             <div id="col-kanban-naranja" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
 
-          <!-- Columna: Bloqueado Crítico -->
           <div class="w-72 flex flex-col h-full bg-[#fff1f2] rounded-xl border border-error-container shadow-md shrink-0">
             <div class="p-4 border-b border-error-container flex justify-between items-center bg-[#ffe4e6] rounded-t-xl">
               <h3 class="font-label-bold text-error uppercase tracking-wider text-xs font-bold">Bloqueado / Crítico</h3>
@@ -281,7 +273,6 @@
             <div id="col-kanban-roja" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
 
-          <!-- NUEVA COLUMNA: Completado / Hecho -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0 border-l-4 border-emerald-500">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-[#f0fdf4] rounded-t-xl">
               <h3 class="font-label-bold text-emerald-800 uppercase tracking-wider text-xs">Hecho / Resuelto</h3>
@@ -382,21 +373,14 @@
   </div>
 
   <script>
-    // Conexión Backend: Coloca aquí el enlace generado al publicar tu Apps Script como aplicación web
     const SCRIPT_DB_URL = "https://script.google.com/macros/s/AKfycbysmm4alStkd5QmLQTSXlQQPq27n2sUdbDM1GytgUi4WvfuFxnhQrxTr7eXukcfj4InBA/exec";
 
     let dataset = [];
 
     document.addEventListener("DOMContentLoaded", () => {
-      // Setear fecha por defecto en formulario (Hoy)
       document.getElementById('task-date').value = new Date().toISOString().substring(0, 10);
-      
-      if(SCRIPT_DB_URL.includes("https://script.google.com/macros/s/AKfycbysmm4alStkd5QmLQTSXlQQPq27n2sUdbDM1GytgUi4WvfuFxnhQrxTr7eXukcfj4InBA/exec")) {
-        console.warn("Utilizando datos simulados de prueba. Configura SCRIPT_DB_URL para conectar tu Google Sheet.");
-        inyectarDatosMock();
-      } else {
-        adquirirDatosDeGoogleSheets();
-      }
+      // Forzamos conexión real directa al arrancar sin condiciones mock automáticas
+      adquirirDatosDeGoogleSheets();
     });
 
     // SPA Engine: Navegación limpia entre pantallas
@@ -406,7 +390,6 @@
       });
       document.getElementById(idPantalla).classList.remove('hidden');
       
-      // Actualizar estilos del menú lateral (Desktop Visual Fix)
       const btnDash = document.getElementById('btn-nav-dashboard');
       const btnKanban = document.getElementById('btn-nav-kanban');
       
@@ -419,7 +402,6 @@
       }
     }
 
-    // Mostrar/ocultar input de bloqueo según radio buttons
     function alternarCampoBloqueo(status) {
       const container = document.getElementById('blocking-reason-container');
       const input = document.getElementById('task-blocker');
@@ -433,14 +415,24 @@
       }
     }
 
-    // FETCH: Obtener datos de Google Sheets
+    // FETCH CON REFRESCO DE CACHÉ ACTIVO
     async function adquirirDatosDeGoogleSheets() {
       try {
-        const response = await fetch(SCRIPT_DB_URL);
-        dataset = await response.json();
-        procesarYRenderizarTodo();
+        // Cache buster temporal dinámico para forzar lectura limpia en Vercel
+        const fetchUrl = SCRIPT_DB_URL + (SCRIPT_DB_URL.includes("?") ? "&" : "?") + "_cb=" + Date.now();
+        const response = await fetch(fetchUrl);
+        const datosCargados = await response.json();
+        
+        if (Array.isArray(datosCargados)) {
+          dataset = datosCargados;
+          procesarYRenderizarTodo();
+        } else {
+          console.warn("La API no devolvió un array válido. Cargando contingencia.");
+          inyectarDatosMock();
+        }
       } catch (err) {
-        console.error("Fallo de conexión con Apps Script API:", err);
+        console.error("Fallo de conexión real con la API de Google, cargando simulación:", err);
+        inyectarDatosMock();
       }
     }
 
@@ -450,7 +442,6 @@
       renderizarTableroKanban();
     }
 
-    // Sincronizar selectores de mandos intermedios con los datos reales del Sheet
     function actualizarFiltrosYSelectores() {
       const selectKanban = document.getElementById('filtro-kanban-mando');
       const responsablesUnicos = [...new Set(dataset.map(t => t.Mando))].filter(Boolean);
@@ -461,47 +452,46 @@
       });
     }
 
-    // ANALÍTICA: Renderizar KPIs, Listas y Gráficos del Dashboard
     function renderizarDashboardMétricas() {
-      const totalActivos = dataset.length;
-      const totalAlertas = dataset.filter(t => t.DiasEstancado > 7 && t.DiasEstancado <= 14).length;
-      const totalCriticos = dataset.filter(t => t.DiasEstancado > 14).length;
+      const totalActivos = dataset.filter(t => t.Estado !== 'Hecho').length;
+      const totalAlertas = dataset.filter(t => t.DiasEstancado > 7 && t.DiasEstancado <= 14 && t.Estado !== 'Hecho').length;
+      const totalCriticos = dataset.filter(t => t.DiasEstancado > 14 && t.Estado !== 'Hecho').length;
 
       document.getElementById('kpi-total-activos').textContent = totalActivos;
       document.getElementById('kpi-total-alertas').textContent = totalAlertas;
       document.getElementById('kpi-total-criticos').textContent = totalCriticos;
 
-      // 1. Gráfico de distribución por estados
-      const estadosCount = { 'To Do': 0, 'En Proceso': 0, 'Bloqueado': 0 };
+      const estadosCount = { 'To Do': 0, 'En Proceso': 0, 'Bloqueado': 0, 'Hecho': 0 };
       dataset.forEach(t => {
         let est = t.Estado;
-        if (parseInt(t.DiasEstancado) > 14) est = 'Bloqueado'; // Forzar vista crítica
+        if (parseInt(t.DiasEstancado) > 14 && t.Estado !== 'Hecho') est = 'Bloqueado';
         if(estadosCount[est] !== undefined) estadosCount[est]++;
       });
 
       const contDistribucion = document.getElementById('lista-distribucion-estados');
       contDistribucion.innerHTML = '';
+      const totalGlobal = dataset.length || 1;
       for (const [key, val] of Object.entries(estadosCount)) {
-        const pct = totalActivos > 0 ? Math.round((val / totalActivos) * 100) : 0;
+        const pct = Math.round((val / totalGlobal) * 100);
         let colorDot = 'bg-secondary';
         if(key === 'To Do') colorDot = 'bg-stone-400';
         if(key === 'Bloqueado') colorDot = 'bg-error';
+        if(key === 'Hecho') colorDot = 'bg-emerald-500';
 
         contDistribucion.insertAdjacentHTML('beforeend', `
           <div class="flex justify-between items-center">
             <div class="flex items-center gap-2">
               <div class="w-3 h-3 rounded-sm ${colorDot}"></div>
-              <span class="font-label-bold text-on-background">${key}</span>
+              <span class="font-label-bold text-on-background text-sm">${key}</span>
             </div>
-            <span class="font-body-md tabular-nums">${pct}% (${val})</span>
+            <span class="font-body-md text-sm tabular-nums">${pct}% (${val})</span>
           </div>
         `);
       }
 
-      // 2. Gráfico de barras por mandos (Días acumulados de estancamiento)
       const estancamientoPorMando = {};
       dataset.forEach(t => {
-        if(t.Mando) {
+        if(t.Mando && t.Estado !== 'Hecho') {
           estancamientoPorMando[t.Mando] = (estancamientoPorMando[t.Mando] || 0) + (parseInt(t.DiasEstancado) || 0);
         }
       });
@@ -519,19 +509,18 @@
         contGrafico.insertAdjacentHTML('beforeend', `
           <div class="flex-1 flex flex-col items-center justify-end z-10 group h-full relative">
             <span class="font-label-bold text-xs mb-1 opacity-0 group-hover:opacity-100 transition-opacity absolute top-[-20px]">${dias}d</span>
-            <div class="w-full max-w-[40px] ${colorBarra} rounded-t-sm transition-all" style="height: ${alturaPct}%"></div>
-            <span class="font-label-bold text-xs text-on-surface-variant truncate w-full text-center mt-2">${mando.split(' ')[0]}</span>
+            <div class="w-full max-w-[32px] ${colorBarra} rounded-t-sm transition-all" style="height: ${alturaPct}%"></div>
+            <span class="font-label-bold text-[11px] text-on-surface-variant truncate w-full text-center mt-2">${mando.split(' ')[0]}</span>
           </div>
         `);
       }
 
-      // 3. Tabla Top 5 Temas Críticos
       const tablaBody = document.getElementById('tabla-top-criticos');
       tablaBody.innerHTML = '';
-      const top5 = [...dataset].sort((a,b) => b.DiasEstancado - a.DiasEstancado).slice(0, 5);
+      const top5 = dataset.filter(t => t.Estado !== 'Hecho').sort((a,b) => b.DiasEstancado - a.DiasEstancado).slice(0, 5);
 
       if(top5.length === 0) {
-        tablaBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-stone-400">No hay temas registrados.</td></tr>`;
+        tablaBody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-sm text-stone-400">No hay temas críticos abiertos.</td></tr>`;
       }
 
       top5.forEach(item => {
@@ -540,7 +529,7 @@
         else if (item.DiasEstancado > 7) badgeColor = "bg-amber-100 text-amber-700 font-bold";
 
         tablaBody.insertAdjacentHTML('beforeend', `
-          <tr class="hover:bg-surface-bright transition-colors">
+          <tr class="hover:bg-surface-bright transition-colors text-sm">
             <td class="p-4 font-label-bold text-primary">${item.Tema}</td>
             <td class="p-4 text-stone-600">${item.Mando}</td>
             <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs ${badgeColor}">${item.DiasEstancado} días</span></td>
@@ -550,12 +539,10 @@
       });
     }
 
-    // INTERFAZ KANBAN: Distribución reactiva por 5 columnas con selector de cambio de estado
     function renderizarTableroKanban() {
       const mandoFiltro = document.getElementById('filtro-kanban-mando').value;
       const soloBloqueados = document.getElementById('chk-solo-bloqueados').checked;
 
-      // Limpiar las 5 columnas
       const colTodo = document.getElementById('col-kanban-todo');
       const colProgress = document.getElementById('col-kanban-inprogress');
       const colNaranja = document.getElementById('col-kanban-naranja');
@@ -567,14 +554,11 @@
       let cuentas = { todo: 0, inprogress: 0, naranja: 0, roja: 0, hecho: 0 };
 
       dataset.forEach(item => {
-        // Reglas de filtrado
         if (mandoFiltro !== 'all' && item.Mando !== mandoFiltro) return;
         
         const dias = parseInt(item.DiasEstancado) || 0;
-        // Si está marcado "Solo Bloqueados", no mostrar los que ya están en "Hecho" ni "To Do" limpios
         if (soloBloqueados && item.Estado !== 'Bloqueado' && item.Estado !== 'Hecho' && dias <= 7) return;
 
-        // Determinar columna destino
         let destino = 'todo';
         if (item.Estado === 'Hecho') destino = 'hecho';
         else if (item.Estado === 'Bloqueado' || dias > 14) destino = 'roja';
@@ -584,11 +568,10 @@
 
         cuentas[destino]++;
 
-        // Estilos de tarjeta según estado actual
         let borderCard = "border-outline-variant";
         let badgeStyle = "bg-stone-100 text-stone-600";
         if(item.Estado === 'Hecho') {
-          borderCard = "border-emerald-200 bg-emerald-50/20";
+          borderCard = "border-emerald-200 bg-emerald-50/10";
           badgeStyle = "bg-emerald-100 text-emerald-800 line-through";
         } else if (destino === 'roja') {
           borderCard = "border-red-300 ring-1 ring-red-100";
@@ -612,14 +595,11 @@
             </div>` + notaCondicional;
         }
 
-        // Generar la tarjeta con selector rápido y botón de eliminar
         const tarjetaHTML = `
           <div class="bg-surface-container-lowest rounded-lg border ${borderCard} p-4 shadow-sm relative overflow-hidden group">
             <div class="flex items-center justify-between gap-2 mb-2">
               <span class="text-[11px] px-2 py-0.5 rounded-full ${badgeStyle}">${item.Estado === 'Hecho' ? 'Resuelto' : dias + ' días activo'}</span>
-              
-              <!-- Selector de cambio de estado rápido -->
-              <select onchange="cambiarEstadoTarea('${item.Tema || item.ID}', this.value)" class="text-[11px] bg-white border border-outline-variant rounded px-1 py-0.5 focus:outline-none focus:ring-1 focus:ring-secondary cursor-pointer">
+              <select onchange="cambiarEstadoTarea('${item.Tema}', this.value)" class="text-[11px] bg-white border border-outline-variant rounded px-1 py-0.5 focus:outline-none focus:ring-1 focus:ring-secondary cursor-pointer">
                 <option value="To Do" ${item.Estado === 'To Do' ? 'selected' : ''}>To Do</option>
                 <option value="En Proceso" ${item.Estado === 'En Proceso' ? 'selected' : ''}>En Proceso</option>
                 <option value="Bloqueado" ${item.Estado === 'Bloqueado' ? 'selected' : ''}>Bloqueado</option>
@@ -628,12 +608,9 @@
             </div>
             <h4 class="text-sm font-semibold text-primary mb-1 leading-tight ${item.Estado === 'Hecho' ? 'line-through text-stone-400' : ''}">${item.Tema}</h4>
             <p class="text-[11px] text-stone-400 mb-3">Mando: <span class="text-stone-700 font-medium">${item.Mando}</span></p>
-            
             ${item.Estado === 'Hecho' ? '' : notaCondicional}
-
-            <!-- Botón de eliminar (visible al pasar el ratón / hover) -->
             <div class="flex justify-end mt-2 pt-2 border-t border-outline-variant/30 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button onclick="eliminarTarea('${item.Tema || item.ID}')" class="text-stone-400 hover:text-error flex items-center gap-1 text-[11px] transition-colors">
+              <button onclick="eliminarTarea('${item.Tema}')" class="text-stone-400 hover:text-error flex items-center gap-1 text-[11px] transition-colors">
                 <span class="material-symbols-outlined text-sm">delete</span> Borrar
               </button>
             </div>
@@ -647,7 +624,6 @@
         if(destino === 'hecho') colHecho.insertAdjacentHTML('beforeend', tarjetaHTML);
       });
 
-      // Actualizar contadores de las 5 columnas
       document.getElementById('badge-count-todo').textContent = cuentas.todo;
       document.getElementById('badge-count-inprogress').textContent = cuentas.inprogress;
       document.getElementById('badge-count-naranja').textContent = cuentas.naranja;
@@ -655,73 +631,58 @@
       document.getElementById('badge-count-hecho').textContent = cuentas.hecho;
     }
 
-    // FUNCIÓN DE ACTUALIZACIÓN: Cambiar estado desde la tarjeta y guardarlo en Google Sheets
     async function cambiarEstadoTarea(identificadorTema, nuevoEstado) {
-      // 1. Actualizar el estado en el dataset local de la memoria para que el cambio sea instantáneo en UI
-      const index = dataset.findIndex(t => (t.Tema === identificadorTema || t.ID === identificadorTema));
+      const index = dataset.findIndex(t => t.Tema === identificadorTema);
       if (index !== -1) {
         dataset[index].Estado = nuevoEstado;
-        // Si se pasa a 'Hecho', detenemos visualmente el contador fijándolo en lo que tuviera o 0
-        if(nuevoEstado === 'Hecho') dataset[index].DiasEstancado = dataset[index].DiasEstancado || 0;
+        if(nuevoEstado === 'Hecho') dataset[index].DiasEstancado = 0;
         procesarYRenderizarTodo();
       }
 
-      // 2. Enviar la petición de actualización real al backend en Google Sheets
-      if (!SCRIPT_DB_URL.includes("REMPLAZA_CON_TU_URL")) {
-        try {
-          await fetch(SCRIPT_DB_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              action: "update",
-              tema: identificadorTema, // El script usará este título para buscar la fila exacta
-              estado: nuevoEstado
-            })
-          });
-          // Opcional: recargar del servidor para asegurar sincronización limpia
-          adquirirDatosDeGoogleSheets();
-        } catch (err) {
-          console.error("Error al sincronizar el cambio de estado con Google Sheets:", err);
-        }
+      try {
+        await fetch(SCRIPT_DB_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "update",
+            tema: identificadorTema,
+            estado: nuevoEstado
+          })
+        });
+        setTimeout(adquirirDatosDeGoogleSheets, 500);
+      } catch (err) {
+        console.error("Error al sincronizar el cambio de estado con Google Sheets:", err);
       }
     }
 
-    // FUNCIÓN DE ELIMINACIÓN: Borra la tarjeta en la UI y envía el "delete" a Google Sheets
     async function eliminarTarea(identificadorTema) {
       if (!confirm("¿Seguro que quieres borrar este asunto de la lista?")) return;
 
-      // 1. Eliminación optimista en la UI (desaparece al instante)
-      dataset = dataset.filter(t => (t.Tema !== identificadorTema && t.ID !== identificadorTema));
+      dataset = dataset.filter(t => t.Tema !== identificadorTema);
       procesarYRenderizarTodo();
 
-      // 2. Enviar petición de borrado al backend
-      if (!SCRIPT_DB_URL.includes("REMPLAZA_CON_TU_URL")) {
-        try {
-          await fetch(SCRIPT_DB_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              action: "delete",
-              tema: identificadorTema // El script buscará este título para eliminar la fila entera
-            })
-          });
-          // Refrescar para asegurar sincronización limpia
-          adquirirDatosDeGoogleSheets();
-        } catch (err) {
-          console.error("Error al borrar la fila en Google Sheets:", err);
-        }
+      try {
+        await fetch(SCRIPT_DB_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "delete",
+            tema: identificadorTema
+          })
+        });
+        setTimeout(adquirirDatosDeGoogleSheets, 500);
+      } catch (err) {
+        console.error("Error al borrar la fila en Google Sheets:", err);
       }
     }
 
-    // FORMULARIO POST: Enviar nueva tarea a la API de Google Sheets
     async function ejecutarEnvioFormulario(e) {
       e.preventDefault();
 
       const nuevaTarea = {
         action: "create",
-        id: "ID-" + Date.now(),
         tema: document.getElementById('task-title').value,
         mando: document.getElementById('task-manager').value,
         fechaInicio: document.getElementById('task-date').value,
@@ -731,8 +692,6 @@
         proximaAccion: document.getElementById('task-next-step').value
       };
 
-      // Inyección optimista local (para respuesta visual inmediata)
-      nuevaTarea.DiasEstancado = 0;
       dataset.unshift({
         Tema: nuevaTarea.tema,
         Mando: nuevaTarea.mando,
@@ -750,23 +709,19 @@
       procesarYRenderizarTodo();
       navegarA('pantalla-dashboard');
 
-      // Envío real a Google Sheets
-      if (!SCRIPT_DB_URL.includes("https://script.google.com/macros/s/AKfycbysmm4alStkd5QmLQTSXlQQPq27n2sUdbDM1GytgUi4WvfuFxnhQrxTr7eXukcfj4InBA/exec")) {
-        try {
-          await fetch(SCRIPT_DB_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(nuevaTarea)
-          });
-          adquirirDatosDeGoogleSheets(); // Refrescar con datos del servidor
-        } catch (err) {
-          console.error("Error al inyectar registro en el Sheet:", err);
-        }
+      try {
+        await fetch(SCRIPT_DB_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(nuevaTarea)
+        });
+        setTimeout(adquirirDatosDeGoogleSheets, 800);
+      } catch (err) {
+        console.error("Error al inyectar registro en el Sheet:", err);
       }
     }
 
-    // DATOS DE MUESTRA SIMULADOS (Para visualizar desarrollo local sin API configurada)
     function inyectarDatosMock() {
       dataset = [
         { Tema: "Validación de muestras de materiales proveedor exterior", Mando: "Laura Martínez", DiasEstancado: 18, Prioridad: "Alta", Estado: "Bloqueado", RazonBloqueo: "Falta de documentación técnica aduanera.", ProximaAccion: "Llamar a la agencia de transportes el jueves." },
