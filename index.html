@@ -241,7 +241,7 @@
       </div>
     </main>
 
-    <!-- ==================== PANTALLA 2: KANBAN VIEW (SOPORTA DOBLE PERSPECTIVA) ==================== -->
+    <!-- ==================== PANTALLA 2: KANBAN VIEW (DOBLE PERSPECTIVA Y SUBDIVISIÓN POR DÍAS) ==================== -->
     <main id="pantalla-kanban" class="hidden flex-1 flex flex-col h-full overflow-hidden w-full">
       <div class="bg-surface-container-lowest border-b border-outline-variant shadow-sm px-margin-mobile md:px-margin-desktop py-md shrink-0">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md mb-md">
@@ -250,7 +250,7 @@
             <p class="font-body-md text-on-surface-variant mt-1">Conmuta de perspectiva para auditar por Flujo de procesos o por Responsable directo.</p>
           </div>
           
-          <!-- SELECTOR DE PERSPECTIVA (ESTADO VS MANDO) -->
+          <!-- SELECTOR DE PERSPECTIVA -->
           <div class="flex bg-surface-container-high p-1 rounded-xl border border-outline-variant shadow-inner self-stretch md:self-auto">
             <button id="tab-vista-estados" onclick="cambiarPerspectivaTablero('estados')" class="flex-1 md:flex-none px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-primary text-on-primary shadow-sm flex items-center gap-1">
               <span class="material-symbols-outlined text-sm">view_kanban</span> Ver por Estado
@@ -261,7 +261,7 @@
           </div>
         </div>
         
-        <!-- SECCIÓN FILTROS (Solo visible en Vista Estados) -->
+        <!-- SECCIÓN FILTROS (Solo Vista Estados) -->
         <div id="barra-filtros-estados" class="flex flex-wrap items-center gap-sm bg-surface-container-low p-xs rounded-lg border border-outline-variant">
           <div class="relative flex-1 min-w-[240px] max-w-[340px]">
             <select id="filtro-kanban-mando" onchange="renderizarTableroKanban()" class="w-full appearance-none bg-surface-container-lowest border border-outline-variant rounded-md py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-secondary">
@@ -275,14 +275,14 @@
           </label>
         </div>
 
-        <!-- NOTIFICACIÓN INFORMATIVA PARA VISTA MANDOS -->
-        <div id="info-vista-mandos" class="hidden text-xs font-medium text-secondary bg-secondary-fixed/30 p-2 rounded-lg border border-secondary/20 flex items-center gap-2">
+        <!-- NOTIFICACIÓN INFORMATIVA PARA VISTA MANDOS (SUBDIVISIÓN ACTUALIZADA A 2 DÍAS) -->
+        <div id="info-vista-mandos" class="hidden text-xs font-semibold text-secondary bg-secondary-fixed/30 p-2 rounded-lg border border-secondary/20 flex items-center gap-2">
           <span class="material-symbols-outlined text-base">info</span> 
-          Foto de carga por responsable. El color superior indica el estado del asunto (*Gris: To Do | Azul: En Proceso | Naranja: Alerta | Rojo: Bloqueado | Verde: Resuelto*).
+          Foto de equipo estructurada: arriba se aíslan las tareas prioritarias con **más de 2 días de retraso** para acelerar el desbloqueo.
         </div>
       </div>
 
-      <!-- CONTENEDOR CENTRAL DE COLUMNAS DINÁMICAS -->
+      <!-- CONTENEDOR CENTRAL DE COLUMNAS -->
       <div class="flex-1 overflow-x-auto overflow-y-hidden kanban-scrollbar bg-surface-bright px-margin-mobile md:px-margin-desktop py-md">
         
         <!-- Tablero 1: Agrupado por Estados (Tradicional) -->
@@ -329,10 +329,8 @@
           </div>
         </div>
 
-        <!-- Tablero 2: Agrupado por Mandos Intermedios (Nueva Perspectiva de Equipo) -->
-        <div id="tablero-estructura-mandos" class="hidden flex gap-md h-full min-w-max items-start">
-          <!-- Las 5 columnas se generan e inyectan dinámicamente con JS basadas en MANDOS_OFICIALES -->
-        </div>
+        <!-- Tablero 2: Agrupado por Mandos Intermedios con subdivisiones internas de retraso -->
+        <div id="tablero-estructura-mandos" class="hidden flex gap-md h-full min-w-max items-start"></div>
 
       </div>
     </main>
@@ -447,11 +445,8 @@
     let metricasResolucion = { mediaGlobal: 0, mediaPorMando: {} };
     let modoEdicion = false;
     let tareaEdicionOriginal = null;
-    
-    // Parámetro de control de perspectiva ('estados' o 'mandos')
     let perspectivaActiva = "estados"; 
 
-    // Lista fija oficial de los mandos intermedios de Injusa
     const MANDOS_OFICIALES = ["José Canales", "Javier Miralles", "Patricia Berbegal", "Eduardo Herrero", "Rafael Roca"];
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -477,7 +472,6 @@
       }
     }
 
-    // CONMUTADOR DE PERSPECTIVA DEL KANBAN
     function cambiarPerspectivaTablero(nuevaPerspectiva) {
       perspectivaActiva = nuevaPerspectiva;
       
@@ -664,7 +658,6 @@
       });
     }
 
-    // RENDERIZADOR MAESTRO DEL TABLERO DE SEGUIMIENTO (SELECTOR DE PERSPECTIVAS)
     function renderizarTableroKanban() {
       if (perspectivaActiva === "estados") {
         renderizarKanbanPorEstados();
@@ -673,7 +666,7 @@
       }
     }
 
-    // PERSPECTIVA A: FILTRADO POR ESTADOS (EL TRADICIONAL)
+    // PERSPECTIVA A: TRADICIONAL POR ESTADOS
     function renderizarKanbanPorEstados() {
       const mandoFiltro = document.getElementById('filtro-kanban-mando').value;
       const soloBloqueados = document.getElementById('chk-solo-bloqueados').checked;
@@ -715,57 +708,95 @@
       document.getElementById('badge-count-hecho').textContent = cuentas.hecho;
     }
 
-    // PERSPECTIVA B: FILTRADO POR RESPONSABLES (FOTO DE EQUIPO PARA REUNIONES)
+    // PERSPECTIVA B: AGRUPADO POR MANDOS CON SEPARACIÓN ESTRICTA (RETRASADAS > 2 DÍAS VS EN PLAZO)
     function renderizarKanbanPorMandosIntermedios() {
       const contenedorTablero = document.getElementById('tablero-estructura-mandos');
       contenedorTablero.innerHTML = '';
 
       MANDOS_OFICIALES.forEach(mando => {
-        // Filtramos los asuntos de este mando concreto
         const asuntosMando = dataset.filter(t => t.Mando === mando);
-        const countAsuntos = asuntosMando.length;
+        
+        // Separamos las tareas según tu nueva regla de control (2 días de corte)
+        // Bloque 1: Abiertas que llevan estrictamente MÁS de 2 días retrasadas
+        const retrasadas = asuntosMando.filter(t => t.Estado !== 'Hecho' && (parseInt(t.DiasEstancado) || 0) > 2)
+                                       .sort((a,b) => b.DiasEstancado - a.DiasEstancado);
+        
+        // Bloque 2: En plazo (≤ 2 días activos) o que ya están completadas con éxito
+        const enPlazo = asuntosMando.filter(t => t.Estado === 'Hecho' || (parseInt(t.DiasEstancado) || 0) <= 2);
 
-        // Estructura de columna para el mando
         let columnaHTML = `
-          <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
-            <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container shadow-inner rounded-t-xl">
+          <div class="w-80 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
+            <!-- Cabecera de Columna -->
+            <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container shadow-inner rounded-t-xl shrink-0">
               <div class="flex flex-col">
                 <h3 class="font-label-bold text-primary font-bold text-sm leading-tight">${mando}</h3>
-                <span class="text-[10px] text-stone-400 font-medium">Mando Intermedio</span>
+                <span class="text-[10px] text-stone-400 font-medium">Asuntos Asignados</span>
               </div>
-              <span class="bg-primary text-on-primary px-2 py-0.5 rounded-full text-[11px] font-bold">${countAsuntos}</span>
+              <span class="bg-primary text-on-primary px-2.5 py-0.5 rounded-full text-[11px] font-bold shadow-sm tabular-nums">${asuntosMando.length}</span>
             </div>
-            <div id="col-mando-${mando.replace(/\s+/g, '')}" class="p-3 flex-1 overflow-y-auto space-y-3 content-start bg-surface-bright/30">
+            
+            <!-- Contenedor con Scroll Interno -->
+            <div class="p-3 flex-1 overflow-y-auto space-y-4 bg-surface-bright/20 kanban-scrollbar">
         `;
 
-        let tarjetasHTML = '';
-        asuntosMando.forEach(item => {
-          const dias = parseInt(item.DiasEstancado) || 0;
-          
-          // Determinamos el color visual superior de la tarjeta basándonos en su flujo real
-          let tipoColorFlujo = 'todo';
-          if (item.Estado === 'Hecho') tipoColorFlujo = 'hecho';
-          else if (item.Estado === 'Bloqueado' || dias > 14) tipoColorFlujo = 'roja';
-          else if (dias > 7) tipoColorFlujo = 'naranja';
-          else if (item.Estado === 'En Proceso') tipoColorFlujo = 'inprogress';
-
-          tarjetasHTML += generarHTMLTarjetaIndividual(item, dias, tipoColorFlujo, false);
-        });
-
-        if (!tarjetasHTML) {
-          tarjetasHTML = `
-            <div class="h-24 border border-dashed border-outline-variant rounded-lg flex flex-col items-center justify-center p-4 text-center bg-stone-50/50">
-              <span class="material-symbols-outlined text-stone-300 text-lg">fact_check</span>
-              <p class="text-[11px] text-stone-400 font-medium mt-1">Sin asuntos asignados</p>
+        // SECCIÓN 1: RETRASADAS (> 2 DÍAS)
+        columnaHTML += `
+          <div class="space-y-2">
+            <div class="flex items-center justify-between border-b border-red-100 pb-1">
+              <span class="text-[10px] font-bold text-red-600 uppercase tracking-wider flex items-center gap-0.5">
+                <span class="material-symbols-outlined text-xs">warning</span> Retrasadas (>2 días)
+              </span>
+              <span class="text-[10px] font-bold bg-red-100 text-red-700 px-1.5 py-0.2 rounded-full tabular-nums">${retrasadas.length}</span>
+            </div>
+        `;
+        
+        if (retrasadas.length > 0) {
+          retrasadas.forEach(item => {
+            const dias = parseInt(item.DiasEstancado) || 0;
+            let tipoColorFlujo = (item.Estado === 'Bloqueado' || dias > 14) ? 'roja' : 'naranja';
+            columnaHTML += generarHTMLTarjetaIndividual(item, dias, tipoColorFlujo, false);
+          });
+        } else {
+          columnaHTML += `
+            <div class="py-3 border border-dashed border-stone-200 rounded-lg text-center bg-stone-50/40">
+              <p class="text-[10px] text-stone-400 font-medium">Limpios de retrasos 🎉</p>
             </div>`;
         }
+        columnaHTML += `</div>`; // Cierre sección retrasadas
 
-        columnaHTML += tarjetasHTML + `</div></div>`;
+        // SECCIÓN 2: EN PLAZO / COMPLETADAS
+        columnaHTML += `
+          <div class="space-y-2 pt-2">
+            <div class="flex items-center justify-between border-b border-stone-200 pb-1">
+              <span class="text-[10px] font-bold text-stone-500 uppercase tracking-wider flex items-center gap-0.5">
+                <span class="material-symbols-outlined text-xs">check_circle</span> En Plazo / Resueltas
+              </span>
+              <span class="text-[10px] font-bold bg-stone-100 text-stone-600 px-1.5 py-0.2 rounded-full tabular-nums">${enPlazo.length}</span>
+            </div>
+        `;
+
+        if (enPlazo.length > 0) {
+          enPlazo.forEach(item => {
+            const dias = parseInt(item.DiasEstancado) || 0;
+            let tipoColorFlujo = 'todo';
+            if (item.Estado === 'Hecho') tipoColorFlujo = 'hecho';
+            else if (item.Estado === 'En Proceso') tipoColorFlujo = 'inprogress';
+            columnaHTML += generarHTMLTarjetaIndividual(item, dias, tipoColorFlujo, false);
+          });
+        } else {
+          columnaHTML += `
+            <div class="py-3 text-center">
+              <p class="text-[10px] text-stone-400">Sin tareas en este bloque</p>
+            </div>`;
+        }
+        columnaHTML += `</div>`; // Cierre sección en plazo
+
+        columnaHTML += `</div></div>`; // Cierre contenedor e infraestructura de columna
         contenedorTablero.insertAdjacentHTML('beforeend', columnaHTML);
       });
     }
 
-    // CONSTRUCTOR AUXILIAR DE TARJETAS (Evita duplicar código de UI)
+    // CONSTRUCTOR DE TARJETAS
     function generarHTMLTarjetaIndividual(item, dias, destinoEstilo, mostrarMandoEnTexto) {
       let borderCard = "border-outline-variant border-t-4 border-t-stone-400";
       let badgeStyle = "bg-stone-100 text-stone-600";
@@ -799,8 +830,8 @@
       }
 
       return `
-        <div class="bg-surface-container-lowest rounded-lg border ${borderCard} p-4 shadow-sm relative overflow-hidden group transition-all hover:shadow-md">
-          <div class="flex items-center justify-between gap-2 mb-2">
+        <div class="bg-surface-container-lowest rounded-lg border ${borderCard} p-3.5 shadow-sm relative overflow-hidden group transition-all hover:shadow-md">
+          <div class="flex items-center justify-between gap-2 mb-1.5">
             <span class="text-[11px] px-2 py-0.5 rounded-full ${badgeStyle}">
               ${item.Estado === 'Hecho' ? 'Resuelto en ' + (item.DiasResolucion || 0) + 'd' : dias + 'd activo'}
             </span>
@@ -811,16 +842,16 @@
               <option value="Hecho" ${item.Estado === 'Hecho' ? 'selected' : ''}>Hecho</option>
             </select>
           </div>
-          <h4 class="text-sm font-semibold text-primary mb-1 leading-tight ${item.Estado === 'Hecho' ? 'line-through text-stone-400' : ''}">${item.Tema}</h4>
+          <h4 class="text-xs font-semibold text-primary mb-1 leading-tight ${item.Estado === 'Hecho' ? 'line-through text-stone-400' : ''}">${item.Tema}</h4>
           
           ${mostrarMandoEnTexto ? 
-            `<p class="text-[11px] text-stone-400 mb-3">Mando: <span class="text-stone-700 font-semibold">${item.Mando}</span></p>` : 
-            `<p class="text-[11px] text-stone-400 mb-3">Estado: <span class="text-stone-600 font-semibold uppercase text-[10px] tracking-wide">${item.Estado === 'Bloqueado' ? 'Bloqueado Físicamente' : item.Estado}</span></p>`
+            `<p class="text-[11px] text-stone-400 mb-2">Mando: <span class="text-stone-700 font-semibold">${item.Mando}</span></p>` : 
+            `<p class="text-[11px] text-stone-400 mb-2">Estado: <span class="text-stone-600 font-semibold uppercase text-[9px] tracking-wide">${item.Estado === 'Bloqueado' ? 'Bloqueado Físicamente' : item.Estado}</span></p>`
           }
           
           ${item.Estado === 'Hecho' ? '' : notaCondicional}
           
-          <div class="flex justify-between items-center mt-2 pt-2 border-t border-outline-variant/30 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div class="flex justify-between items-center mt-2 pt-1.5 border-t border-outline-variant/30 opacity-0 group-hover:opacity-100 transition-opacity">
             <button onclick="editarTarea('${item.Tema}')" class="text-stone-400 hover:text-secondary flex items-center gap-1 text-[11px] transition-colors">
               <span class="material-symbols-outlined text-sm">edit</span> Editar
             </button>
@@ -1032,11 +1063,13 @@
 
     function inyectarDatosMock() {
       dataset = [
-        { Tema: "Prueba Moldes 123", Mando: "Javier Miralles", DiasEstancado: 16, Prioridad: "Alta", Estado: "En Proceso", RazonBloqueo: "Ninguna", ProximaAccion: "nuevo" }
+        { Tema: "Prueba Moldes 123", Mando: "Javier Miralles", DiasEstancado: 16, Prioridad: "Alta", Estado: "En Proceso", RazonBloqueo: "Ninguna", ProximaAccion: "nuevo" },
+        { Tema: "Baterías SilverSanz", Mando: "Eduardo Herrero", DiasEstancado: 9, Prioridad: "Media", Estado: "En Proceso", RazonBloqueo: "Ninguna", ProximaAccion: "Ninguna" },
+        { Tema: "Enviar conectores a China cargadores", Mando: "Eduardo Herrero", DiasEstancado: 9, Prioridad: "Media", Estado: "To Do", RazonBloqueo: "Ninguna", ProximaAccion: "Ninguna" }
       ];
       metricasResolucion = {
         mediaGlobal: 12.4,
-        mediaPorMando: { "Javier Miralles": 12.4, "José Canales": 8.2 }
+        mediaPorMando: { "Javier Miralles": 12.4, "José Canales": 8.2, "Eduardo Herrero": 9.0 }
       };
       procesarYRenderizarTodo();
     }
