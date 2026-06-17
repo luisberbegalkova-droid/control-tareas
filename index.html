@@ -785,7 +785,7 @@
       const diasEstancado = estadoVal === 'Hecho' ? 0 : Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
       if (modoEdicion) {
-        // 1. Actualizar primero la interfaz local de Vercel de forma instantánea
+        // 1. Actualizar primero la interfaz visual de Vercel de inmediato
         const index = dataset.findIndex(t => t.Tema === tareaEdicionOriginal);
         if (index !== -1) {
           dataset[index] = {
@@ -802,33 +802,47 @@
         procesarYRenderizarTodo();
         navegarA('pantalla-kanban');
 
-        // 2. ENVIAR UNA ÚNICA ORDEN DIRECTA DE ACTUALIZACIÓN (Mucho más robusto)
+        // 2. CONTROL DE FLUJO ESTRICTO: Sincronizar en Google Sheets secuencialmente
         try {
+          // BLOQUEO 1: Forzamos al navegador a ESPERAR (await) a que Google confirme el borrado
+          const respuestaBorrado = await fetch(SCRIPT_DB_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "delete",
+              tema: tareaEdicionOriginal
+            })
+          });
+
+          // Pequeña pausa de seguridad de 200ms para que el servidor de Google asiente el borrado en el disco
+          await new Promise(resolve => setTimeout(resolve, 200));
+
+          // BLOQUEO 2: Ahora que el viejo ya no existe, insertamos el nuevo con la fecha del 01/06/2026
           await fetch(SCRIPT_DB_URL, {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              action: "update",
-              tema: tareaEdicionOriginal, // Usamos el título original para localizar la fila exacta en el Sheet
-              nuevoTema: asuntoTexto || tareaEdicionOriginal, // Por si decides cambiarle el nombre al asunto
+              action: "create",
+              tema: asuntoTexto || tareaEdicionOriginal,
               mando: mandoVal,
+              fechaInicio: fechaVal,
               prioridad: prioridadVal,
               estado: estadoVal,
               razonBloqueo: razonBloqueoVal,
-              proximaAccion: proximaAccionVal,
-              fechaInicio: fechaVal
+              proximaAccion: proximaAccionVal
             })
           });
 
-          // Refresco controlado tras asentamiento
-          setTimeout(adquirirDatosDeGoogleSheets, 600);
+          // Refresco de tranquilidad tras 1 segundo para pintar lo que Google ha guardado de verdad
+          setTimeout(adquirirDatosDeGoogleSheets, 1000);
         } catch (err) {
           console.error("Error al actualizar la tarea en Google Sheets:", err);
         }
 
       } else {
-        // Modo creación normal
+        // Modo creación normal (sin cambios)
         const nuevaTarea = {
           action: "create",
           tema: asuntoTexto || "Asunto sin título (" + new Date().toLocaleDateString() + ")",
@@ -860,7 +874,7 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(nuevaTarea)
           });
-          setTimeout(adquirirDatosDeGoogleSheets, 600);
+          setTimeout(adquirirDatosDeGoogleSheets, 800);
         } catch (err) {
           console.error("Error al registrar en Google Sheets:", err);
         }
