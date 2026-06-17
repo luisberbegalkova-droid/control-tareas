@@ -612,7 +612,7 @@
             </div>` + notaCondicional;
         }
 
-        // Generar la tarjeta con el selector rápido de cambio de estado
+        // Generar la tarjeta con selector rápido y botón de eliminar
         const tarjetaHTML = `
           <div class="bg-surface-container-lowest rounded-lg border ${borderCard} p-4 shadow-sm relative overflow-hidden group">
             <div class="flex items-center justify-between gap-2 mb-2">
@@ -630,6 +630,13 @@
             <p class="text-[11px] text-stone-400 mb-3">Mando: <span class="text-stone-700 font-medium">${item.Mando}</span></p>
             
             ${item.Estado === 'Hecho' ? '' : notaCondicional}
+
+            <!-- Botón de eliminar (visible al pasar el ratón / hover) -->
+            <div class="flex justify-end mt-2 pt-2 border-t border-outline-variant/30 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button onclick="eliminarTarea('${item.Tema || item.ID}')" class="text-stone-400 hover:text-error flex items-center gap-1 text-[11px] transition-colors">
+                <span class="material-symbols-outlined text-sm">delete</span> Borrar
+              </button>
+            </div>
           </div>
         `;
 
@@ -676,6 +683,34 @@
           adquirirDatosDeGoogleSheets();
         } catch (err) {
           console.error("Error al sincronizar el cambio de estado con Google Sheets:", err);
+        }
+      }
+    }
+
+    // FUNCIÓN DE ELIMINACIÓN: Borra la tarjeta en la UI y envía el "delete" a Google Sheets
+    async function eliminarTarea(identificadorTema) {
+      if (!confirm("¿Seguro que quieres borrar este asunto de la lista?")) return;
+
+      // 1. Eliminación optimista en la UI (desaparece al instante)
+      dataset = dataset.filter(t => (t.Tema !== identificadorTema && t.ID !== identificadorTema));
+      procesarYRenderizarTodo();
+
+      // 2. Enviar petición de borrado al backend
+      if (!SCRIPT_DB_URL.includes("REMPLAZA_CON_TU_URL")) {
+        try {
+          await fetch(SCRIPT_DB_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "delete",
+              tema: identificadorTema // El script buscará este título para eliminar la fila entera
+            })
+          });
+          // Refrescar para asegurar sincronización limpia
+          adquirirDatosDeGoogleSheets();
+        } catch (err) {
+          console.error("Error al borrar la fila en Google Sheets:", err);
         }
       }
     }
