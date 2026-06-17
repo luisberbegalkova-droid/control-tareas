@@ -95,7 +95,6 @@
 </head>
 <body class="flex h-full bg-background text-on-background overflow-hidden antialiased font-sans">
 
-  <!-- MENÚ LATERAL (DESKTOP) -->
   <nav class="hidden md:flex flex-col h-full py-md px-sm border-r border-outline-variant bg-surface-container w-64 shadow-md z-20 shrink-0">
     <div class="mb-lg px-xs">
       <div class="flex items-center gap-xs mb-xs">
@@ -126,11 +125,10 @@
       </li>
     </ul>
     <div class="mt-auto pt-md border-t border-outline-variant text-xs text-stone-400 px-3">
-      FlowState OS v2.0
+      FlowState OS v2.1
     </div>
   </nav>
 
-  <!-- MENÚ INFERIOR (MOBILE) -->
   <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-lowest border-t border-outline-variant z-50 flex justify-around items-center h-16 pb-safe">
     <button onclick="navegarA('pantalla-dashboard')" class="flex flex-col items-center justify-center w-full h-full text-secondary font-bold">
       <span class="material-symbols-outlined">dashboard</span>
@@ -153,7 +151,6 @@
       <span class="material-symbols-outlined text-on-surface">menu</span>
     </header>
 
-    <!-- ==================== PANTALLA 1: DASHBOARD ==================== -->
     <main id="pantalla-dashboard" class="flex-1 overflow-y-auto w-full p-margin-mobile md:p-margin-desktop space-y-md md:space-y-lg">
       <div class="hidden md:flex justify-between items-end mb-4">
         <div>
@@ -162,7 +159,6 @@
         </div>
       </div>
 
-      <!-- FILA DE CARDS SUPERIOR (ESTADOS ACTIVOS) -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-md">
         <div class="kpi-card bg-surface-container-lowest rounded-xl border border-outline-variant p-md flex flex-col">
           <span class="font-label-bold text-label-bold text-on-surface-variant mb-4 flex items-center gap-2">
@@ -184,7 +180,6 @@
         </div>
       </div>
 
-      <!-- FILA DE CARDS INTERMEDIA: RENDIMIENTO DE RESOLUCIÓN -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-md">
         <div class="lg:col-span-4 kpi-card bg-surface-container-lowest rounded-xl border border-outline-variant p-md flex flex-col border-l-4 border-emerald-500">
           <span class="font-label-bold text-label-bold text-on-surface-variant mb-4 flex items-center gap-2">
@@ -208,19 +203,18 @@
         </div>
       </div>
 
-      <!-- GRÁFICOS -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-md">
         <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl border border-outline-variant p-md flex flex-col">
           <h3 class="font-headline-md text-headline-md text-primary mb-6">Estado Global</h3>
           <div class="space-y-4" id="lista-distribucion-estados"></div>
         </div>
         <div class="lg:col-span-8 bg-surface-container-lowest rounded-xl border border-outline-variant p-md flex flex-col">
-          <h3 class="font-headline-md text-headline-md text-primary mb-2">Estancamiento por Responsable</h3>
-          <div id="grafico-barras-mandos" class="flex-1 flex items-end gap-4 h-64 mt-4 relative pb-8 border-b border-surface-variant px-4"></div>
+          <h3 class="font-headline-md text-headline-md text-primary mb-1">Promedio de Días de Retraso por Responsable</h3>
+          <p class="text-xs text-on-surface-variant mb-4">Muestra la media de envejecimiento de las tareas que tienen abiertas actualmente.</p>
+          <div id="grafico-barras-mandos" class="flex-1 flex items-end gap-4 h-64 relative pb-8 border-b border-surface-variant px-4"></div>
         </div>
       </div>
 
-      <!-- TABLA TOP CRÍTICOS -->
       <div class="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden">
         <div class="p-4 border-b border-surface-variant flex justify-between items-center bg-surface-bright">
           <h3 class="font-headline-md text-headline-md text-primary">Top 5 Temas Más Estancados</h3>
@@ -241,7 +235,6 @@
       </div>
     </main>
 
-    <!-- ==================== PANTALLA 2: KANBAN VIEW (DOBLE PERSPECTIVA Y SUBDIVISIÓN POR DÍAS) ==================== -->
     <main id="pantalla-kanban" class="hidden flex-1 flex flex-col h-full overflow-hidden w-full">
       <div class="bg-surface-container-lowest border-b border-outline-variant shadow-sm px-margin-mobile md:px-margin-desktop py-md shrink-0">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md mb-md">
@@ -250,7 +243,6 @@
             <p class="font-body-md text-on-surface-variant mt-1">Conmuta de perspectiva para auditar por Flujo de procesos o por Responsable directo.</p>
           </div>
           
-          <!-- SELECTOR DE PERSPECTIVA -->
           <div class="flex bg-surface-container-high p-1 rounded-xl border border-outline-variant shadow-inner self-stretch md:self-auto">
             <button id="tab-vista-estados" onclick="cambiarPerspectivaTablero('estados')" class="flex-1 md:flex-none px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-primary text-on-primary shadow-sm flex items-center gap-1">
               <span class="material-symbols-outlined text-sm">view_kanban</span> Ver por Estado
@@ -261,7 +253,6 @@
           </div>
         </div>
         
-        <!-- SECCIÓN FILTROS (Solo Vista Estados) -->
         <div id="barra-filtros-estados" class="flex flex-wrap items-center gap-sm bg-surface-container-low p-xs rounded-lg border border-outline-variant">
           <div class="relative flex-1 min-w-[240px] max-w-[340px]">
             <select id="filtro-kanban-mando" onchange="renderizarTableroKanban()" class="w-full appearance-none bg-surface-container-lowest border border-outline-variant rounded-md py-2 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-secondary">
@@ -275,19 +266,15 @@
           </label>
         </div>
 
-        <!-- NOTIFICACIÓN INFORMATIVA PARA VISTA MANDOS (SUBDIVISIÓN ACTUALIZADA A 2 DÍAS) -->
         <div id="info-vista-mandos" class="hidden text-xs font-semibold text-secondary bg-secondary-fixed/30 p-2 rounded-lg border border-secondary/20 flex items-center gap-2">
           <span class="material-symbols-outlined text-base">info</span> 
           Foto de equipo estructurada: arriba se aíslan las tareas prioritarias con **más de 2 días de retraso** para acelerar el desbloqueo.
         </div>
       </div>
 
-      <!-- CONTENEDOR CENTRAL DE COLUMNAS -->
       <div class="flex-1 overflow-x-auto overflow-y-hidden kanban-scrollbar bg-surface-bright px-margin-mobile md:px-margin-desktop py-md">
         
-        <!-- Tablero 1: Agrupado por Estados (Tradicional) -->
         <div id="tablero-estructura-estados" class="flex gap-md h-full min-w-max items-start">
-          <!-- Columna: To Do -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low rounded-t-xl">
               <h3 class="font-label-bold text-on-surface uppercase tracking-wider text-xs">To Do</h3>
@@ -295,7 +282,6 @@
             </div>
             <div id="col-kanban-todo" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
-          <!-- Columna: In Progress -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low rounded-t-xl">
               <h3 class="font-label-bold text-on-surface uppercase tracking-wider text-xs">En Proceso</h3>
@@ -303,7 +289,6 @@
             </div>
             <div id="col-kanban-inprogress" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
-          <!-- Columna: Alerta Naranja -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-[#fff7ed] rounded-t-xl">
               <h3 class="font-label-bold text-amber-800 uppercase tracking-wider text-xs">Alerta Naranja (>7d)</h3>
@@ -311,7 +296,6 @@
             </div>
             <div id="col-kanban-naranja" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
-          <!-- Columna: Bloqueado Crítico -->
           <div class="w-72 flex flex-col h-full bg-[#fff1f2] rounded-xl border border-error-container shadow-md shrink-0">
             <div class="p-4 border-b border-error-container flex justify-between items-center bg-[#ffe4e6] rounded-t-xl">
               <h3 class="font-label-bold text-error uppercase tracking-wider text-xs font-bold">Bloqueado / Crítico</h3>
@@ -319,7 +303,6 @@
             </div>
             <div id="col-kanban-roja" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
-          <!-- Columna: Hecho -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0 border-l-4 border-emerald-500">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-[#f0fdf4] rounded-t-xl">
               <h3 class="font-label-bold text-emerald-800 uppercase tracking-wider text-xs">Hecho / Resuelto</h3>
@@ -329,13 +312,10 @@
           </div>
         </div>
 
-        <!-- Tablero 2: Agrupado por Mandos Intermedios con subdivisiones internas de retraso -->
         <div id="tablero-estructura-mandos" class="hidden flex gap-md h-full min-w-max items-start"></div>
-
       </div>
     </main>
 
-    <!-- ==================== PANTALLA 3: FORMULARIO ==================== -->
     <main id="pantalla-formulario" class="hidden flex-1 overflow-y-auto bg-surface-container-lowest flex justify-center py-xl px-margin-mobile md:px-margin-desktop">
       <div class="w-full max-w-2xl bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant p-lg md:p-xl h-fit">
         <div class="flex justify-between items-start mb-lg border-b border-outline-variant pb-md">
@@ -437,7 +417,6 @@
 
   </div>
 
-  <!-- ==================== CONTROLADOR CENTRAL JAVASCRIPT ==================== -->
   <script>
     const SCRIPT_DB_URL = "https://script.google.com/macros/s/AKfycbysmm4alStkd5QmLQTSXlQQPq27n2sUdbDM1GytgUi4WvfuFxnhQrxTr7eXukcfj4InBA/exec";
 
@@ -608,31 +587,57 @@
         `);
       }
 
-      const estancamientoPorMando = {};
+      // ==================== LÓGICA CORREGIDA: GRÁFICO POR PROMEDIO REAL DE RETRASO ====================
+      const sumaDiasPorMando = {};
+      const conteoTareasPorMando = {};
+      
+      // Inicializar todos los mandos de la compañía para que aparezcan en el gráfico aunque estén a cero
+      MANDOS_OFICIALES.forEach(m => {
+        sumaDiasPorMando[m] = 0;
+        conteoTareasPorMando[m] = 0;
+      });
+
       dataset.forEach(t => {
-        if(t.Mando && t.Estado !== 'Hecho') {
-          estancamientoPorMando[t.Mando] = (estancamientoPorMando[t.Mando] || 0) + (parseInt(t.DiasEstancado) || 0);
+        // Solo calculamos el promedio de lo que está ENVEJECIENDO (abierto)
+        if(t.Mando && t.Estado !== 'Hecho' && MANDOS_OFICIALES.includes(t.Mando)) {
+          sumaDiasPorMando[t.Mando] += (parseInt(t.DiasEstancado) || 0);
+          conteoTareasPorMando[t.Mando] += 1;
         }
+      });
+
+      const promediosPorMando = {};
+      MANDOS_OFICIALES.forEach(m => {
+        const tareas = conteoTareasPorMando[m];
+        promediosPorMando[m] = tareas > 0 ? parseFloat((sumaDiasPorMando[m] / tareas).toFixed(1)) : 0;
       });
 
       const contGrafico = document.getElementById('grafico-barras-mandos');
       contGrafico.innerHTML = '';
-      const maxEstancamiento = Math.max(...Object.values(estancamientoPorMando), 1);
+      const maxPromedio = Math.max(...Object.values(promediosPorMando), 5); // Base mínima de escala visual a 5 días
 
-      for (const [mando, dias] of Object.entries(estancamientoPorMando)) {
-        const alturaPct = Math.min(Math.round((dias / maxEstancamiento) * 100), 100);
+      MANDOS_OFICIALES.forEach(mando => {
+        const promedioDias = promediosPorMando[mando];
+        const numTareasAbiertas = conteoTareasPorMando[mando];
+        const alturaPct = Math.min(Math.round((promedioDias / maxPromedio) * 100), 100);
+        
         let colorBarra = 'bg-secondary/70';
-        if(dias > 20) colorBarra = 'bg-error';
-        else if (dias > 10) colorBarra = 'bg-amber-500';
+        if(promedioDias > 10) colorBarra = 'bg-error';
+        else if (promedioDias > 4) colorBarra = 'bg-amber-500';
 
         contGrafico.insertAdjacentHTML('beforeend', `
           <div class="flex-1 flex flex-col items-center justify-end z-10 group h-full relative">
-            <span class="font-label-bold text-xs mb-1 opacity-0 group-hover:opacity-100 transition-opacity absolute top-[-20px]">${dias}d</span>
-            <div class="w-full max-w-[32px] ${colorBarra} rounded-t-sm transition-all" style="height: ${alturaPct}%"></div>
+            <span class="font-label-bold text-xs mb-1 text-slate-700 font-bold tracking-tight">${promedioDias} d</span>
+            
+            <div class="w-full max-w-[36px] ${colorBarra} rounded-t-sm transition-all shadow-sm relative group-hover:brightness-95 cursor-help" 
+                 style="height: ${alturaPct}%"
+                 title="${mando}: ${promedioDias} días de retraso medio sobre ${numTareasAbiertas} tareas abiertas.">
+            </div>
+            
             <span class="font-label-bold text-[11px] text-on-surface-variant truncate w-full text-center mt-2">${mando.split(' ')[0]}</span>
           </div>
         `);
-      }
+      });
+      // ==============================================================================================
 
       const tablaBody = document.getElementById('tabla-top-criticos');
       tablaBody.innerHTML = '';
@@ -666,7 +671,6 @@
       }
     }
 
-    // PERSPECTIVA A: TRADICIONAL POR ESTADOS
     function renderizarKanbanPorEstados() {
       const mandoFiltro = document.getElementById('filtro-kanban-mando').value;
       const soloBloqueados = document.getElementById('chk-solo-bloqueados').checked;
@@ -708,7 +712,6 @@
       document.getElementById('badge-count-hecho').textContent = cuentas.hecho;
     }
 
-    // PERSPECTIVA B: AGRUPADO POR MANDOS CON SEPARACIÓN ESTRICTA (RETRASADAS > 2 DÍAS VS EN PLAZO)
     function renderizarKanbanPorMandosIntermedios() {
       const contenedorTablero = document.getElementById('tablero-estructura-mandos');
       contenedorTablero.innerHTML = '';
@@ -716,17 +719,13 @@
       MANDOS_OFICIALES.forEach(mando => {
         const asuntosMando = dataset.filter(t => t.Mando === mando);
         
-        // Separamos las tareas según tu nueva regla de control (2 días de corte)
-        // Bloque 1: Abiertas que llevan estrictamente MÁS de 2 días retrasadas
         const retrasadas = asuntosMando.filter(t => t.Estado !== 'Hecho' && (parseInt(t.DiasEstancado) || 0) > 2)
                                        .sort((a,b) => b.DiasEstancado - a.DiasEstancado);
         
-        // Bloque 2: En plazo (≤ 2 días activos) o que ya están completadas con éxito
         const enPlazo = asuntosMando.filter(t => t.Estado === 'Hecho' || (parseInt(t.DiasEstancado) || 0) <= 2);
 
         let columnaHTML = `
           <div class="w-80 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
-            <!-- Cabecera de Columna -->
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container shadow-inner rounded-t-xl shrink-0">
               <div class="flex flex-col">
                 <h3 class="font-label-bold text-primary font-bold text-sm leading-tight">${mando}</h3>
@@ -735,11 +734,9 @@
               <span class="bg-primary text-on-primary px-2.5 py-0.5 rounded-full text-[11px] font-bold shadow-sm tabular-nums">${asuntosMando.length}</span>
             </div>
             
-            <!-- Contenedor con Scroll Interno -->
             <div class="p-3 flex-1 overflow-y-auto space-y-4 bg-surface-bright/20 kanban-scrollbar">
         `;
 
-        // SECCIÓN 1: RETRASADAS (> 2 DÍAS)
         columnaHTML += `
           <div class="space-y-2">
             <div class="flex items-center justify-between border-b border-red-100 pb-1">
@@ -762,9 +759,8 @@
               <p class="text-[10px] text-stone-400 font-medium">Limpios de retrasos 🎉</p>
             </div>`;
         }
-        columnaHTML += `</div>`; // Cierre sección retrasadas
+        columnaHTML += `</div>`;
 
-        // SECCIÓN 2: EN PLAZO / COMPLETADAS
         columnaHTML += `
           <div class="space-y-2 pt-2">
             <div class="flex items-center justify-between border-b border-stone-200 pb-1">
@@ -789,14 +785,12 @@
               <p class="text-[10px] text-stone-400">Sin tareas en este bloque</p>
             </div>`;
         }
-        columnaHTML += `</div>`; // Cierre sección en plazo
-
-        columnaHTML += `</div></div>`; // Cierre contenedor e infraestructura de columna
+        columnaHTML += `</div>`;
+        columnaHTML += `</div></div>`; 
         contenedorTablero.insertAdjacentHTML('beforeend', columnaHTML);
       });
     }
 
-    // CONSTRUCTOR DE TARJETAS
     function generarHTMLTarjetaIndividual(item, dias, destinoEstilo, mostrarMandoEnTexto) {
       let borderCard = "border-outline-variant border-t-4 border-t-stone-400";
       let badgeStyle = "bg-stone-100 text-stone-600";
@@ -876,11 +870,7 @@
           method: "POST",
           mode: "no-cors",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: "update",
-            tema: identificadorTema,
-            estado: nuevoEstado
-          })
+          body: JSON.stringify({ action: "update", tema: identificadorTema, estado: nuevoEstado })
         });
         setTimeout(adquirirDatosDeGoogleSheets, 600);
       } catch (err) {
@@ -899,10 +889,7 @@
           method: "POST",
           mode: "no-cors",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: "delete",
-            tema: identificadorTema
-          })
+          body: JSON.stringify({ action: "delete", tema: identificadorTema })
         });
         setTimeout(adquirirDatosDeGoogleSheets, 500);
       } catch (err) {
@@ -913,15 +900,12 @@
     function prepararNuevoRegistro() {
       modoEdicion = false;
       tareaEdicionOriginal = null;
-      
       document.getElementById('form-alta-tarea').reset();
       document.getElementById('task-date').value = new Date().toISOString().substring(0, 10);
       alternarCampoBloqueo('To Do');
-      
       document.getElementById('form-titulo').textContent = "Registrar Asunto / Bloqueo";
       document.getElementById('form-subtitulo').textContent = "Introduce los datos clave para iniciar el rastreo de envejecimiento del tema.";
       document.getElementById('btn-submit-form').textContent = "Guardar Asunto";
-      
       navegarA('pantalla-formulario');
     }
 
@@ -952,7 +936,6 @@
       }
 
       document.getElementById('task-next-step').value = item.ProximaAccion || '';
-
       document.getElementById('form-titulo').textContent = "Editar Asunto / Bloqueo";
       document.getElementById('form-subtitulo').textContent = "Modifica los datos del tema seleccionado y guarda los cambios.";
       document.getElementById('btn-submit-form').textContent = "Guardar Cambios";
@@ -983,7 +966,7 @@
         }
         
         procesarYRenderizarTodo();
-        navegarA('pantalla-kanban');
+        navegarA('pantalla-dashboard');
 
         try {
           await fetch(SCRIPT_DB_URL, {
@@ -992,9 +975,7 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ action: "delete", tema: tareaEdicionOriginal })
           });
-
           await new Promise(resolve => setTimeout(resolve, 200));
-
           await fetch(SCRIPT_DB_URL, {
             method: "POST",
             mode: "no-cors",
@@ -1010,7 +991,6 @@
               proximaAccion: proximaAccionVal
             })
           });
-
           setTimeout(adquirirDatosDeGoogleSheets, 1000);
         } catch (err) {
           console.error("Error al editar registro en Sheets:", err);
@@ -1063,13 +1043,13 @@
 
     function inyectarDatosMock() {
       dataset = [
-        { Tema: "Prueba Moldes 123", Mando: "Javier Miralles", DiasEstancado: 16, Prioridad: "Alta", Estado: "En Proceso", RazonBloqueo: "Ninguna", ProximaAccion: "nuevo" },
-        { Tema: "Baterías SilverSanz", Mando: "Eduardo Herrero", DiasEstancado: 9, Prioridad: "Media", Estado: "En Proceso", RazonBloqueo: "Ninguna", ProximaAccion: "Ninguna" },
-        { Tema: "Enviar conectores a China cargadores", Mando: "Eduardo Herrero", DiasEstancado: 9, Prioridad: "Media", Estado: "To Do", RazonBloqueo: "Ninguna", ProximaAccion: "Ninguna" }
+        { Tema: "Prueba Moldes 123", Mando: "Javier Miralles", DiasEstancado: 12, Prioridad: "Alta", Estado: "En Proceso", RazonBloqueo: "Ninguna", ProximaAccion: "nuevo" },
+        { Tema: "Baterías SilverSanz", Mando: "Eduardo Herrero", DiasEstancado: 4, Prioridad: "Media", Estado: "En Proceso", RazonBloqueo: "Ninguna", ProximaAccion: "Ninguna" },
+        { Tema: "Enviar conectores a China cargadores", Mando: "Eduardo Herrero", DiasEstancado: 8, Prioridad: "Media", Estado: "To Do", RazonBloqueo: "Ninguna", ProximaAccion: "Ninguna" }
       ];
       metricasResolucion = {
-        mediaGlobal: 12.4,
-        mediaPorMando: { "Javier Miralles": 12.4, "José Canales": 8.2, "Eduardo Herrero": 9.0 }
+        mediaGlobal: 9.5,
+        mediaPorMando: { "Javier Miralles": 11.2, "José Canales": 7.5, "Eduardo Herrero": 8.0 }
       };
       procesarYRenderizarTodo();
     }
