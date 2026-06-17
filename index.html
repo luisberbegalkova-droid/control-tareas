@@ -96,6 +96,7 @@
 </head>
 <body class="flex h-full bg-background text-on-background overflow-hidden antialiased font-sans">
 
+  <!-- MENÚ LATERAL (DESKTOP) -->
   <nav class="hidden md:flex flex-col h-full py-md px-sm border-r border-outline-variant bg-surface-container w-64 shadow-md z-20 shrink-0">
     <div class="mb-lg px-xs">
       <div class="flex items-center gap-xs mb-xs">
@@ -130,6 +131,7 @@
     </div>
   </nav>
 
+  <!-- MENÚ INFERIOR (MOBILE) -->
   <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-lowest border-t border-outline-variant z-50 flex justify-around items-center h-16 pb-safe">
     <button onclick="navegarA('pantalla-dashboard')" class="flex flex-col items-center justify-center w-full h-full text-secondary font-bold">
       <span class="material-symbols-outlined">dashboard</span>
@@ -152,6 +154,7 @@
       <span class="material-symbols-outlined text-on-surface">menu</span>
     </header>
 
+    <!-- ==================== PANTALLA 1: DASHBOARD ==================== -->
     <main id="pantalla-dashboard" class="flex-1 overflow-y-auto w-full p-margin-mobile md:p-margin-desktop space-y-md md:space-y-lg">
       <div class="hidden md:flex justify-between items-end mb-6">
         <div>
@@ -212,6 +215,7 @@
       </div>
     </main>
 
+    <!-- ==================== PANTALLA 2: KANBAN VIEW ==================== -->
     <main id="pantalla-kanban" class="hidden flex-1 flex flex-col h-full overflow-hidden w-full">
       <div class="bg-surface-container-lowest border-b border-outline-variant shadow-sm px-margin-mobile md:px-margin-desktop py-md shrink-0">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md mb-md">
@@ -238,9 +242,11 @@
         </div>
       </div>
 
+      <!-- Contenedor Scroll Columnas -->
       <div class="flex-1 overflow-x-auto overflow-y-hidden kanban-scrollbar bg-surface-bright px-margin-mobile md:px-margin-desktop py-md">
         <div class="flex gap-md h-full min-w-max items-start">
           
+          <!-- Columna: To Do -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low rounded-t-xl">
               <h3 class="font-label-bold text-on-surface uppercase tracking-wider text-xs">To Do</h3>
@@ -249,6 +255,7 @@
             <div id="col-kanban-todo" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
 
+          <!-- Columna: In Progress -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low rounded-t-xl">
               <h3 class="font-label-bold text-on-surface uppercase tracking-wider text-xs">En Proceso</h3>
@@ -257,6 +264,7 @@
             <div id="col-kanban-inprogress" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
 
+          <!-- Columna: Alerta Naranja (7-14 días) -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-[#fff7ed] rounded-t-xl">
               <h3 class="font-label-bold text-amber-800 uppercase tracking-wider text-xs">Alerta Naranja (>7d)</h3>
@@ -265,6 +273,7 @@
             <div id="col-kanban-naranja" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
 
+          <!-- Columna: Bloqueado Crítico -->
           <div class="w-72 flex flex-col h-full bg-[#fff1f2] rounded-xl border border-error-container shadow-md shrink-0">
             <div class="p-4 border-b border-error-container flex justify-between items-center bg-[#ffe4e6] rounded-t-xl">
               <h3 class="font-label-bold text-error uppercase tracking-wider text-xs font-bold">Bloqueado / Crítico</h3>
@@ -273,6 +282,7 @@
             <div id="col-kanban-roja" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
 
+          <!-- Columna: Completado / Hecho -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0 border-l-4 border-emerald-500">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-[#f0fdf4] rounded-t-xl">
               <h3 class="font-label-bold text-emerald-800 uppercase tracking-wider text-xs">Hecho / Resuelto</h3>
@@ -285,6 +295,7 @@
       </div>
     </main>
 
+    <!-- ==================== PANTALLA 3: FORMULARIO (ACTUALIZADO) ==================== -->
     <main id="pantalla-formulario" class="hidden flex-1 overflow-y-auto bg-surface-container-lowest flex justify-center py-xl px-margin-mobile md:px-margin-desktop">
       <div class="w-full max-w-2xl bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant p-lg md:p-xl h-fit">
         <div class="flex justify-between items-start mb-lg border-b border-outline-variant pb-md">
@@ -300,17 +311,27 @@
         <form id="form-alta-tarea" onsubmit="ejecutarEnvioFormulario(event)" class="flex flex-col gap-6">
           <div class="flex flex-col gap-xs">
             <label class="font-label-bold text-on-surface" for="task-title">Título / Asunto</label>
-            <input required class="w-full bg-surface-bright border border-outline-variant rounded-lg px-sm py-sm text-body-md focus:ring-1 focus:ring-secondary outline-none" id="task-title" placeholder="¿Qué se está estancando?" type="text"/>
+            <input class="w-full bg-surface-bright border border-outline-variant rounded-lg px-sm py-sm text-body-md focus:ring-1 focus:ring-secondary outline-none" id="task-title" placeholder="¿Qué se está estancando?" type="text"/>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
             <div class="flex flex-col gap-xs">
               <label class="font-label-bold text-on-surface" for="task-manager">Mando Intermedio Responsable</label>
-              <input required class="w-full bg-surface-bright border border-outline-variant rounded-lg px-sm py-sm text-body-md focus:ring-1 focus:ring-secondary outline-none" id="task-manager" placeholder="Ej: Carlos Ruiz" type="text"/>
+              <div class="relative">
+                <select class="w-full bg-surface-bright border border-outline-variant rounded-lg px-sm py-sm text-body-md focus:ring-1 focus:ring-secondary outline-none appearance-none cursor-pointer" id="task-manager">
+                  <option value="Sin Asignar">Selecciona responsable...</option>
+                  <option value="José Canales">José Canales</option>
+                  <option value="Javier Miralles">Javier Miralles</option>
+                  <option value="Patricia Berbegal">Patricia Berbegal</option>
+                  <option value="Eduardo Herrero">Eduardo Herrero</option>
+                  <option value="Rafael Roca">Rafael Roca</option>
+                </select>
+                <span class="material-symbols-outlined absolute right-sm top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-sm">expand_more</span>
+              </div>
             </div>
             <div class="flex flex-col gap-xs">
               <label class="font-label-bold text-on-surface" for="task-date">Fecha de Inicio</label>
-              <input required class="w-full bg-surface-bright border border-outline-variant rounded-lg px-sm py-sm text-body-md focus:ring-1 focus:ring-secondary outline-none" id="task-date" type="date"/>
+              <input class="w-full bg-surface-bright border border-outline-variant rounded-lg px-sm py-sm text-body-md focus:ring-1 focus:ring-secondary outline-none" id="task-date" type="date"/>
             </div>
           </div>
 
@@ -351,7 +372,7 @@
 
             <div class="hidden flex flex-col gap-xs border-t border-outline-variant mt-4 pt-4" id="blocking-reason-container">
               <label class="font-label-bold text-error flex items-center gap-1" for="task-blocker">
-                <span class="material-symbols-outlined text-sm">warning</span> Razón del Bloqueo Obligatoria
+                <span class="material-symbols-outlined text-sm">warning</span> Razón del Bloqueo
               </label>
               <textarea class="w-full bg-surface-container-lowest border border-error rounded-lg px-sm py-sm text-sm focus:ring-1 focus:ring-error outline-none resize-none" id="task-blocker" placeholder="Especifica qué o quién impide avanzar..." rows="2"></textarea>
             </div>
@@ -359,7 +380,7 @@
 
           <div class="flex flex-col gap-xs">
             <label class="font-label-bold text-on-surface" for="task-next-step">Acción de Desbloqueo Inmediata (Next Step)</label>
-            <input required class="w-full bg-surface-bright border border-outline-variant rounded-lg px-sm py-sm text-body-md focus:ring-1 focus:ring-secondary outline-none" id="task-next-step" placeholder="¿Qué acción concreta se ejecutará esta semana?" type="text"/>
+            <input class="w-full bg-surface-bright border border-outline-variant rounded-lg px-sm py-sm text-body-md focus:ring-1 focus:ring-secondary outline-none" id="task-next-step" placeholder="¿Qué acción concreta se ejecutará esta semana?" type="text"/>
           </div>
 
           <div class="flex justify-end gap-md pt-4 border-t border-outline-variant">
@@ -372,6 +393,7 @@
 
   </div>
 
+  <!-- ==================== CONTROLADOR CENTRAL JAVASCRIPT ==================== -->
   <script>
     const SCRIPT_DB_URL = "https://script.google.com/macros/s/AKfycbysmm4alStkd5QmLQTSXlQQPq27n2sUdbDM1GytgUi4WvfuFxnhQrxTr7eXukcfj4InBA/exec";
 
@@ -379,11 +401,9 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById('task-date').value = new Date().toISOString().substring(0, 10);
-      // Forzamos conexión real directa al arrancar sin condiciones mock automáticas
       adquirirDatosDeGoogleSheets();
     });
 
-    // SPA Engine: Navegación limpia entre pantallas
     function navegarA(idPantalla) {
       ['pantalla-dashboard', 'pantalla-kanban', 'pantalla-formulario'].forEach(id => {
         document.getElementById(id).classList.add('hidden');
@@ -404,21 +424,16 @@
 
     function alternarCampoBloqueo(status) {
       const container = document.getElementById('blocking-reason-container');
-      const input = document.getElementById('task-blocker');
       if(status === 'Bloqueado') {
         container.classList.remove('hidden');
-        input.setAttribute('required', 'true');
       } else {
         container.classList.add('hidden');
-        input.removeAttribute('required');
-        input.value = '';
+        document.getElementById('task-blocker').value = '';
       }
     }
 
-    // FETCH CON REFRESCO DE CACHÉ ACTIVO
     async function adquirirDatosDeGoogleSheets() {
       try {
-        // Cache buster temporal dinámico para forzar lectura limpia en Vercel
         const fetchUrl = SCRIPT_DB_URL + (SCRIPT_DB_URL.includes("?") ? "&" : "?") + "_cb=" + Date.now();
         const response = await fetch(fetchUrl);
         const datosCargados = await response.json();
@@ -427,11 +442,11 @@
           dataset = datosCargados;
           procesarYRenderizarTodo();
         } else {
-          console.warn("La API no devolvió un array válido. Cargando contingencia.");
+          console.warn("La API devolvió un formato inesperado. Cargando simulación local.");
           inyectarDatosMock();
         }
       } catch (err) {
-        console.error("Fallo de conexión real con la API de Google, cargando simulación:", err);
+        console.error("Error conectando al Sheets backend, cargando simulación:", err);
         inyectarDatosMock();
       }
     }
@@ -652,7 +667,7 @@
         });
         setTimeout(adquirirDatosDeGoogleSheets, 500);
       } catch (err) {
-        console.error("Error al sincronizar el cambio de estado con Google Sheets:", err);
+        console.error("Error sincronizando estado:", err);
       }
     }
 
@@ -674,22 +689,25 @@
         });
         setTimeout(adquirirDatosDeGoogleSheets, 500);
       } catch (err) {
-        console.error("Error al borrar la fila en Google Sheets:", err);
+        console.error("Error al eliminar fila:", err);
       }
     }
 
     async function ejecutarEnvioFormulario(e) {
       e.preventDefault();
 
+      const asuntoTexto = document.getElementById('task-title').value.trim();
+
+      // Control preventivo de campos vacíos para evitar celdas rotas en Sheets
       const nuevaTarea = {
         action: "create",
-        tema: document.getElementById('task-title').value,
+        tema: asuntoTexto || "Asunto sin título (" + new Date().toLocaleDateString() + ")",
         mando: document.getElementById('task-manager').value,
-        fechaInicio: document.getElementById('task-date').value,
+        fechaInicio: document.getElementById('task-date').value || new Date().toISOString().substring(0, 10),
         prioridad: document.querySelector('input[name="priority"]:checked').value,
         estado: document.querySelector('input[name="status"]:checked').value,
-        razonBloqueo: document.getElementById('task-blocker').value,
-        proximaAccion: document.getElementById('task-next-step').value
+        razonBloqueo: document.getElementById('task-blocker').value || "Ninguna",
+        proximaAccion: document.getElementById('task-next-step').value || "Pendiente de definir"
       };
 
       dataset.unshift({
@@ -718,16 +736,16 @@
         });
         setTimeout(adquirirDatosDeGoogleSheets, 800);
       } catch (err) {
-        console.error("Error al inyectar registro en el Sheet:", err);
+        console.error("Error al registrar en Google Sheets:", err);
       }
     }
 
     function inyectarDatosMock() {
       dataset = [
-        { Tema: "Validación de muestras de materiales proveedor exterior", Mando: "Laura Martínez", DiasEstancado: 18, Prioridad: "Alta", Estado: "Bloqueado", RazonBloqueo: "Falta de documentación técnica aduanera.", ProximaAccion: "Llamar a la agencia de transportes el jueves." },
-        { Tema: "Ajuste de matriz en línea de ensamblaje principal", Mando: "Carlos Ruiz", DiasEstancado: 9, Prioridad: "Alta", Estado: "En Proceso", RazonBloqueo: "", ProximaAccion: "Verificar tolerancias de moldes con equipo técnico." },
-        { Tema: "Actualizar previsión de compras y materiales Q3", Mando: "Elena Gómez", DiasEstancado: 3, Prioridad: "Media", Estado: "To Do", RazonBloqueo: "", ProximaAccion: "Consolidar reportes de stock." },
-        { Tema: "Homologación certificación ISO planta de pintado", Mando: "Laura Martínez", DiasEstancado: 22, Prioridad: "Alta", Estado: "En Proceso", RazonBloqueo: "Retenido por auditoría de riesgos de terceros.", ProximaAccion: "Escalar caso directamente con Dirección." }
+        { Tema: "Validación de muestras de materiales proveedor exterior", Mando: "Patricia Berbegal", DiasEstancado: 18, Prioridad: "Alta", Estado: "Bloqueado", RazonBloqueo: "Falta de documentación técnica aduanera.", ProximaAccion: "Llamar a la agencia de transportes el jueves." },
+        { Tema: "Ajuste de matriz en línea de ensamblaje principal", Mando: "José Canales", DiasEstancado: 9, Prioridad: "Alta", Estado: "En Proceso", RazonBloqueo: "", ProximaAccion: "Verificar tolerancias de moldes con equipo técnico." },
+        { Tema: "Actualizar previsión de compras y materiales Q3", Mando: "Eduardo Herrero", DiasEstancado: 3, Prioridad: "Media", Estado: "To Do", RazonBloqueo: "", ProximaAccion: "Consolidar reportes de stock." },
+        { Tema: "Homologación certificación ISO planta de pintado", Mando: "Javier Miralles", DiasEstancado: 22, Prioridad: "Alta", Estado: "En Proceso", RazonBloqueo: "Retenido por auditoría de riesgos de terceros.", ProximaAccion: "Escalar caso directamente con Dirección." }
       ];
       procesarYRenderizarTodo();
     }
