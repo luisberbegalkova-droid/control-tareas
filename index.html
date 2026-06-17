@@ -108,7 +108,7 @@
           <p class="font-label-sm text-label-sm text-on-surface-variant">Executive Suite</p>
         </div>
       </div>
-      <button onclick="navegarA('pantalla-formulario')" class="mt-md w-full bg-primary text-on-primary font-label-bold text-label-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm">
+      <button onclick="prepararNuevoRegistro()" class="mt-md w-full bg-primary text-on-primary font-label-bold text-label-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm">
         <span class="material-symbols-outlined text-sm">add</span> Registrar Tema
       </button>
     </div>
@@ -141,7 +141,7 @@
       <span class="material-symbols-outlined">view_kanban</span>
       <span class="text-[10px] mt-1 font-medium">Kanban</span>
     </button>
-    <button onclick="navegarA('pantalla-formulario')" class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant">
+    <button onclick="prepararNuevoRegistro()" class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant">
       <span class="material-symbols-outlined">add_box</span>
       <span class="text-[10px] mt-1 font-medium">Nuevo</span>
     </button>
@@ -223,7 +223,7 @@
             <h2 class="font-headline-lg text-primary">Flujo de Tareas (1:1)</h2>
             <p class="font-body-md text-on-surface-variant mt-1">Filtra por tu mando intermedio para desatascar temas en vuestro seguimiento diario.</p>
           </div>
-          <button onclick="navegarA('pantalla-formulario')" class="bg-secondary text-on-secondary py-2 px-6 rounded-lg font-label-bold text-label-bold hover:bg-secondary-container transition-all flex items-center gap-xs">
+          <button onclick="prepararNuevoRegistro()" class="bg-secondary text-on-secondary py-2 px-6 rounded-lg font-label-bold text-label-bold hover:bg-secondary-container transition-all flex items-center gap-xs">
             <span class="material-symbols-outlined">add_task</span> Nueva Tarea
           </button>
         </div>
@@ -300,10 +300,10 @@
       <div class="w-full max-w-2xl bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant p-lg md:p-xl h-fit">
         <div class="flex justify-between items-start mb-lg border-b border-outline-variant pb-md">
           <div>
-            <h2 class="font-headline-lg text-primary mb-xs">Registrar Asunto / Bloqueo</h2>
-            <p class="font-body-md text-on-surface-variant">Introduce los datos clave para iniciar el rastreo de envejecimiento del tema.</p>
+            <h2 id="form-titulo" class="font-headline-lg text-primary mb-xs">Registrar Asunto / Bloqueo</h2>
+            <p id="form-subtitulo" class="font-body-md text-on-surface-variant">Introduce los datos clave para iniciar el rastreo de envejecimiento del tema.</p>
           </div>
-          <button onclick="navegarA('pantalla-dashboard')" class="text-on-surface-variant hover:text-error p-2 rounded-full hover:bg-error-container">
+          <button type="button" onclick="navegarA('pantalla-dashboard')" class="text-on-surface-variant hover:text-error p-2 rounded-full hover:bg-error-container">
             <span class="material-symbols-outlined">close</span>
           </button>
         </div>
@@ -355,7 +355,7 @@
 
           <div class="flex flex-col gap-xs p-md bg-surface-bright border border-outline-variant rounded-lg">
             <label class="font-label-bold text-on-surface mb-2">Estado de Entrada</label>
-            <div class="flex gap-md">
+            <div class="flex flex-wrap gap-md">
               <label class="flex items-center gap-xs cursor-pointer">
                 <input checked class="w-4 h-4 text-secondary focus:ring-secondary" name="status" onchange="alternarCampoBloqueo(this.value)" type="radio" value="To Do"/>
                 <span class="text-sm font-medium ml-1">To Do</span>
@@ -367,6 +367,10 @@
               <label class="flex items-center gap-xs cursor-pointer">
                 <input class="w-4 h-4 text-error focus:ring-error" name="status" onchange="alternarCampoBloqueo(this.value)" type="radio" value="Bloqueado"/>
                 <span class="text-sm font-medium ml-1 text-error font-bold">Bloqueado Físicamente</span>
+              </label>
+              <label class="flex items-center gap-xs cursor-pointer">
+                <input class="w-4 h-4 text-emerald-500 focus:ring-emerald-500" name="status" onchange="alternarCampoBloqueo(this.value)" type="radio" value="Hecho"/>
+                <span class="text-sm font-medium ml-1 text-emerald-600">Hecho / Resuelto</span>
               </label>
             </div>
 
@@ -385,7 +389,7 @@
 
           <div class="flex justify-end gap-md pt-4 border-t border-outline-variant">
             <button onclick="navegarA('pantalla-dashboard')" class="px-6 py-2 rounded-lg border border-secondary text-secondary font-label-bold" type="button">Cancelar</button>
-            <button class="px-6 py-2 rounded-lg bg-primary text-on-primary font-label-bold hover:bg-primary-container transition-all" type="submit">Guardar Asunto</button>
+            <button id="btn-submit-form" class="px-6 py-2 rounded-lg bg-primary text-on-primary font-label-bold hover:bg-primary-container transition-all" type="submit">Guardar Asunto</button>
           </div>
         </form>
       </div>
@@ -398,6 +402,8 @@
     const SCRIPT_DB_URL = "https://script.google.com/macros/s/AKfycbysmm4alStkd5QmLQTSXlQQPq27n2sUdbDM1GytgUi4WvfuFxnhQrxTr7eXukcfj4InBA/exec";
 
     let dataset = [];
+    let modoEdicion = false;
+    let tareaEdicionOriginal = null;
 
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById('task-date').value = new Date().toISOString().substring(0, 10);
@@ -624,7 +630,10 @@
             <h4 class="text-sm font-semibold text-primary mb-1 leading-tight ${item.Estado === 'Hecho' ? 'line-through text-stone-400' : ''}">${item.Tema}</h4>
             <p class="text-[11px] text-stone-400 mb-3">Mando: <span class="text-stone-700 font-medium">${item.Mando}</span></p>
             ${item.Estado === 'Hecho' ? '' : notaCondicional}
-            <div class="flex justify-end mt-2 pt-2 border-t border-outline-variant/30 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div class="flex justify-between items-center mt-2 pt-2 border-t border-outline-variant/30 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button onclick="editarTarea('${item.Tema}')" class="text-stone-400 hover:text-secondary flex items-center gap-1 text-[11px] transition-colors">
+                <span class="material-symbols-outlined text-sm">edit</span> Editar
+              </button>
               <button onclick="eliminarTarea('${item.Tema}')" class="text-stone-400 hover:text-error flex items-center gap-1 text-[11px] transition-colors">
                 <span class="material-symbols-outlined text-sm">delete</span> Borrar
               </button>
@@ -693,51 +702,184 @@
       }
     }
 
-    async function ejecutarEnvioFormulario(e) {
-      e.preventDefault();
-
-      const asuntoTexto = document.getElementById('task-title').value.trim();
-
-      // Control preventivo de campos vacíos para evitar celdas rotas en Sheets
-      const nuevaTarea = {
-        action: "create",
-        tema: asuntoTexto || "Asunto sin título (" + new Date().toLocaleDateString() + ")",
-        mando: document.getElementById('task-manager').value,
-        fechaInicio: document.getElementById('task-date').value || new Date().toISOString().substring(0, 10),
-        prioridad: document.querySelector('input[name="priority"]:checked').value,
-        estado: document.querySelector('input[name="status"]:checked').value,
-        razonBloqueo: document.getElementById('task-blocker').value || "Ninguna",
-        proximaAccion: document.getElementById('task-next-step').value || "Pendiente de definir"
-      };
-
-      dataset.unshift({
-        Tema: nuevaTarea.tema,
-        Mando: nuevaTarea.mando,
-        DiasEstancado: 0,
-        Prioridad: nuevaTarea.prioridad,
-        Estado: nuevaTarea.estado,
-        RazonBloqueo: nuevaTarea.razonBloqueo,
-        ProximaAccion: nuevaTarea.proximaAccion
-      });
-
+    function prepararNuevoRegistro() {
+      modoEdicion = false;
+      tareaEdicionOriginal = null;
+      
       document.getElementById('form-alta-tarea').reset();
       document.getElementById('task-date').value = new Date().toISOString().substring(0, 10);
       alternarCampoBloqueo('To Do');
       
-      procesarYRenderizarTodo();
-      navegarA('pantalla-dashboard');
+      document.getElementById('form-titulo').textContent = "Registrar Asunto / Bloqueo";
+      document.getElementById('form-subtitulo').textContent = "Introduce los datos clave para iniciar el rastreo de envejecimiento del tema.";
+      document.getElementById('btn-submit-form').textContent = "Guardar Asunto";
+      
+      navegarA('pantalla-formulario');
+    }
 
-      try {
-        await fetch(SCRIPT_DB_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(nuevaTarea)
-        });
-        setTimeout(adquirirDatosDeGoogleSheets, 800);
-      } catch (err) {
-        console.error("Error al registrar en Google Sheets:", err);
+    function editarTarea(identificadorTema) {
+      const item = dataset.find(t => t.Tema === identificadorTema);
+      if (!item) return;
+
+      modoEdicion = true;
+      tareaEdicionOriginal = identificadorTema;
+
+      // Rellenar formulario
+      document.getElementById('task-title').value = item.Tema;
+      document.getElementById('task-manager').value = item.Mando;
+      
+      // Calcular la fecha original basándonos en DiasEstancado
+      const dias = parseInt(item.DiasEstancado) || 0;
+      const dateObj = new Date();
+      dateObj.setDate(dateObj.getDate() - dias);
+      document.getElementById('task-date').value = dateObj.toISOString().substring(0, 10);
+
+      // Prioridad
+      const prioridadRadios = document.getElementsByName('priority');
+      prioridadRadios.forEach(radio => {
+        radio.checked = (radio.value === item.Prioridad);
+      });
+
+      // Estado
+      const estadoRadios = document.getElementsByName('status');
+      estadoRadios.forEach(radio => {
+        radio.checked = (radio.value === item.Estado);
+      });
+
+      // Razón de bloqueo
+      alternarCampoBloqueo(item.Estado);
+      if (item.Estado === 'Bloqueado') {
+        document.getElementById('task-blocker').value = item.RazonBloqueo || '';
+      } else {
+        document.getElementById('task-blocker').value = '';
       }
+
+      // Próxima acción
+      document.getElementById('task-next-step').value = item.ProximaAccion || '';
+
+      // Cambiar textos del formulario
+      document.getElementById('form-titulo').textContent = "Editar Asunto / Bloqueo";
+      document.getElementById('form-subtitulo').textContent = "Modifica los datos del tema seleccionado y guarda los cambios.";
+      document.getElementById('btn-submit-form').textContent = "Guardar Cambios";
+
+      navegarA('pantalla-formulario');
+    }
+
+    async function ejecutarEnvioFormulario(e) {
+      e.preventDefault();
+
+      const asuntoTexto = document.getElementById('task-title').value.trim();
+      const mandoVal = document.getElementById('task-manager').value;
+      const fechaVal = document.getElementById('task-date').value || new Date().toISOString().substring(0, 10);
+      const prioridadVal = document.querySelector('input[name="priority"]:checked').value;
+      const estadoVal = document.querySelector('input[name="status"]:checked').value;
+      const razonBloqueoVal = document.getElementById('task-blocker').value || "Ninguna";
+      const proximaAccionVal = document.getElementById('task-next-step').value || "Pendiente de definir";
+
+      // Calcular DiasEstancado localmente
+      const inicioDate = new Date(fechaVal);
+      const hoy = new Date();
+      inicioDate.setHours(0,0,0,0);
+      hoy.setHours(0,0,0,0);
+      const diffTime = Math.max(0, hoy - inicioDate);
+      const diasEstancado = estadoVal === 'Hecho' ? 0 : Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+      if (modoEdicion) {
+        // Modo edición: actualizar localmente
+        const index = dataset.findIndex(t => t.Tema === tareaEdicionOriginal);
+        if (index !== -1) {
+          dataset[index] = {
+            Tema: asuntoTexto || tareaEdicionOriginal,
+            Mando: mandoVal,
+            DiasEstancado: diasEstancado,
+            Prioridad: prioridadVal,
+            Estado: estadoVal,
+            RazonBloqueo: razonBloqueoVal,
+            ProximaAccion: proximaAccionVal
+          };
+        }
+        
+        procesarYRenderizarTodo();
+        navegarA('pantalla-kanban');
+
+        // Sincronizar en Sheets (primero borrar el original, luego crear el nuevo para actualizar)
+        try {
+          await fetch(SCRIPT_DB_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "delete",
+              tema: tareaEdicionOriginal
+            })
+          });
+
+          await fetch(SCRIPT_DB_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "create",
+              tema: asuntoTexto || tareaEdicionOriginal,
+              mando: mandoVal,
+              fechaInicio: fechaVal,
+              prioridad: prioridadVal,
+              estado: estadoVal,
+              razonBloqueo: razonBloqueoVal,
+              proximaAccion: proximaAccionVal
+            })
+          });
+
+          setTimeout(adquirirDatosDeGoogleSheets, 800);
+        } catch (err) {
+          console.error("Error al actualizar la tarea en Google Sheets:", err);
+        }
+
+      } else {
+        // Modo creación
+        const nuevaTarea = {
+          action: "create",
+          tema: asuntoTexto || "Asunto sin título (" + new Date().toLocaleDateString() + ")",
+          mando: mandoVal,
+          fechaInicio: fechaVal,
+          prioridad: prioridadVal,
+          estado: estadoVal,
+          razonBloqueo: razonBloqueoVal,
+          proximaAccion: proximaAccionVal
+        };
+
+        dataset.unshift({
+          Tema: nuevaTarea.tema,
+          Mando: nuevaTarea.mando,
+          DiasEstancado: diasEstancado,
+          Prioridad: nuevaTarea.prioridad,
+          Estado: nuevaTarea.estado,
+          RazonBloqueo: nuevaTarea.razonBloqueo,
+          ProximaAccion: nuevaTarea.proximaAccion
+        });
+
+        procesarYRenderizarTodo();
+        navegarA('pantalla-dashboard');
+
+        try {
+          await fetch(SCRIPT_DB_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(nuevaTarea)
+          });
+          setTimeout(adquirirDatosDeGoogleSheets, 800);
+        } catch (err) {
+          console.error("Error al registrar en Google Sheets:", err);
+        }
+      }
+
+      // Limpiar y resetear estado de edición
+      document.getElementById('form-alta-tarea').reset();
+      document.getElementById('task-date').value = new Date().toISOString().substring(0, 10);
+      alternarCampoBloqueo('To Do');
+      modoEdicion = false;
+      tareaEdicionOriginal = null;
     }
 
     function inyectarDatosMock() {
