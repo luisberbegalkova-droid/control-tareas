@@ -241,39 +241,53 @@
         </div>
       </div>
 
+      <!-- Contenedor Scroll Columnas (Actualizado a 5 columnas) -->
       <div class="flex-1 overflow-x-auto overflow-y-hidden kanban-scrollbar bg-surface-bright px-margin-mobile md:px-margin-desktop py-md">
         <div class="flex gap-md h-full min-w-max items-start">
           
-          <div class="w-80 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
+          <!-- Columna: To Do -->
+          <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low rounded-t-xl">
-              <h3 class="font-label-bold text-on-surface uppercase tracking-wider">To Do</h3>
-              <span id="badge-count-todo" class="bg-surface-variant text-on-surface-variant px-2 py-0.5 rounded-full text-xs">0</span>
+              <h3 class="font-label-bold text-on-surface uppercase tracking-wider text-xs">To Do</h3>
+              <span id="badge-count-todo" class="bg-surface-variant text-on-surface-variant px-2 py-0.5 rounded-full text-[11px]">0</span>
             </div>
             <div id="col-kanban-todo" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
 
-          <div class="w-80 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
+          <!-- Columna: In Progress -->
+          <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low rounded-t-xl">
-              <h3 class="font-label-bold text-on-surface uppercase tracking-wider">En Proceso</h3>
-              <span id="badge-count-inprogress" class="bg-secondary-fixed text-on-secondary-fixed-variant px-2 py-0.5 rounded-full text-xs">0</span>
+              <h3 class="font-label-bold text-on-surface uppercase tracking-wider text-xs">En Proceso</h3>
+              <span id="badge-count-inprogress" class="bg-secondary-fixed text-on-secondary-fixed-variant px-2 py-0.5 rounded-full text-[11px]">0</span>
             </div>
             <div id="col-kanban-inprogress" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
 
-          <div class="w-80 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
+          <!-- Columna: Alerta Naranja (7-14 días) -->
+          <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-[#fff7ed] rounded-t-xl">
-              <h3 class="font-label-bold text-amber-800 uppercase tracking-wider">Alerta Naranja (>7d)</h3>
-              <span id="badge-count-naranja" class="bg-[#ffedd5] text-[#9a3412] px-2 py-0.5 rounded-full text-xs">0</span>
+              <h3 class="font-label-bold text-amber-800 uppercase tracking-wider text-xs">Alerta Naranja (>7d)</h3>
+              <span id="badge-count-naranja" class="bg-[#ffedd5] text-[#9a3412] px-2 py-0.5 rounded-full text-[11px]">0</span>
             </div>
             <div id="col-kanban-naranja" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
 
-          <div class="w-80 flex flex-col h-full bg-[#fff1f2] rounded-xl border border-error-container shadow-md shrink-0">
+          <!-- Columna: Bloqueado Crítico -->
+          <div class="w-72 flex flex-col h-full bg-[#fff1f2] rounded-xl border border-error-container shadow-md shrink-0">
             <div class="p-4 border-b border-error-container flex justify-between items-center bg-[#ffe4e6] rounded-t-xl">
-              <h3 class="font-label-bold text-error uppercase tracking-wider font-bold">Bloqueado / Crítico</h3>
-              <span id="badge-count-roja" class="bg-error text-on-error px-2 py-0.5 rounded-full text-xs shadow-sm">0</span>
+              <h3 class="font-label-bold text-error uppercase tracking-wider text-xs font-bold">Bloqueado / Crítico</h3>
+              <span id="badge-count-roja" class="bg-error text-on-error px-2 py-0.5 rounded-full text-[11px] shadow-sm">0</span>
             </div>
             <div id="col-kanban-roja" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
+          </div>
+
+          <!-- NUEVA COLUMNA: Completado / Hecho -->
+          <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0 border-l-4 border-emerald-500">
+            <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-[#f0fdf4] rounded-t-xl">
+              <h3 class="font-label-bold text-emerald-800 uppercase tracking-wider text-xs">Hecho / Resuelto</h3>
+              <span id="badge-count-hecho" class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full text-[11px]">0</span>
+            </div>
+            <div id="col-kanban-hecho" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
 
         </div>
@@ -536,71 +550,86 @@
       });
     }
 
-    // INTERFAZ KANBAN: Distribución reactiva por columnas filtradas
+    // INTERFAZ KANBAN: Distribución reactiva por 5 columnas con selector de cambio de estado
     function renderizarTableroKanban() {
       const mandoFiltro = document.getElementById('filtro-kanban-mando').value;
       const soloBloqueados = document.getElementById('chk-solo-bloqueados').checked;
 
-      // Limpiar columnas
+      // Limpiar las 5 columnas
       const colTodo = document.getElementById('col-kanban-todo');
       const colProgress = document.getElementById('col-kanban-inprogress');
       const colNaranja = document.getElementById('col-kanban-naranja');
       const colRoja = document.getElementById('col-kanban-roja');
+      const colHecho = document.getElementById('col-kanban-hecho');
 
-      colTodo.innerHTML = ''; colProgress.innerHTML = ''; colNaranja.innerHTML = ''; colRoja.innerHTML = '';
+      colTodo.innerHTML = ''; colProgress.innerHTML = ''; colNaranja.innerHTML = ''; colRoja.innerHTML = ''; colHecho.innerHTML = '';
 
-      let cuentas = { todo: 0, inprogress: 0, naranja: 0, roja: 0 };
+      let cuentas = { todo: 0, inprogress: 0, naranja: 0, roja: 0, hecho: 0 };
 
       dataset.forEach(item => {
         // Reglas de filtrado
         if (mandoFiltro !== 'all' && item.Mando !== mandoFiltro) return;
         
         const dias = parseInt(item.DiasEstancado) || 0;
-        if (soloBloqueados && item.Estado !== 'Bloqueado' && dias <= 7) return;
+        // Si está marcado "Solo Bloqueados", no mostrar los que ya están en "Hecho" ni "To Do" limpios
+        if (soloBloqueados && item.Estado !== 'Bloqueado' && item.Estado !== 'Hecho' && dias <= 7) return;
 
-        // Determinar columna destino según envejecimiento o estado explícito
+        // Determinar columna destino
         let destino = 'todo';
-        if (item.Estado === 'Bloqueado' || dias > 14) destino = 'roja';
+        if (item.Estado === 'Hecho') destino = 'hecho';
+        else if (item.Estado === 'Bloqueado' || dias > 14) destino = 'roja';
         else if (dias > 7) destino = 'naranja';
         else if (item.Estado === 'En Proceso') destino = 'inprogress';
         else destino = 'todo';
 
         cuentas[destino]++;
 
-        // Estilos de tarjeta
+        // Estilos de tarjeta según estado actual
         let borderCard = "border-outline-variant";
         let badgeStyle = "bg-stone-100 text-stone-600";
+        if(item.Estado === 'Hecho') {
+          borderCard = "border-emerald-200 bg-emerald-50/20";
+          badgeStyle = "bg-emerald-100 text-emerald-800 line-through";
+        } else if (destino === 'roja') {
+          borderCard = "border-red-300 ring-1 ring-red-100";
+          badgeStyle = "bg-red-100 text-red-700 font-bold";
+        } else if (destino === 'naranja') {
+          borderCard = "border-amber-300";
+          badgeStyle = "bg-amber-100 text-amber-800 font-bold";
+        }
+
         let notaCondicional = `
           <div class="bg-surface-container-low p-2 rounded border border-outline-variant mb-2">
             <p class="text-[10px] text-stone-400 uppercase font-bold tracking-wide">Próxima Acción</p>
             <p class="text-xs text-stone-700">${item.ProximaAccion || 'No definida'}</p>
           </div>`;
 
-        if (destino === 'roja') {
-          borderCard = "border-red-300 ring-1 ring-red-100";
-          badgeStyle = "bg-red-100 text-red-700 font-bold animate-pulse";
-          if (item.RazonBloqueo) {
-            notaCondicional = `
-              <div class="bg-red-50 p-2 rounded border border-red-200 mb-2">
-                <p class="text-[10px] text-red-500 uppercase font-bold tracking-wide">Causa del Bloqueo</p>
-                <p class="text-xs text-stone-800 font-medium">${item.RazonBloqueo}</p>
-              </div>` + notaCondicional;
-          }
-        } else if (destino === 'naranja') {
-          borderCard = "border-amber-300";
-          badgeStyle = "bg-amber-100 text-amber-800 font-bold";
+        if (destino === 'roja' && item.RazonBloqueo) {
+          notaCondicional = `
+            <div class="bg-red-50 p-2 rounded border border-red-200 mb-2">
+              <p class="text-[10px] text-red-500 uppercase font-bold tracking-wide">Causa del Bloqueo</p>
+              <p class="text-xs text-stone-800 font-medium">${item.RazonBloqueo}</p>
+            </div>` + notaCondicional;
         }
 
+        // Generar la tarjeta con el selector rápido de cambio de estado
         const tarjetaHTML = `
-          <div class="bg-surface-container-lowest rounded-lg border ${borderCard} p-4 shadow-sm relative overflow-hidden">
+          <div class="bg-surface-container-lowest rounded-lg border ${borderCard} p-4 shadow-sm relative overflow-hidden group">
             <div class="flex items-center justify-between gap-2 mb-2">
-              <span class="text-[11px] px-2 py-0.5 rounded-full ${badgeStyle}">${dias} días activo</span>
-              <span class="text-[10px] uppercase font-bold tracking-wider text-stone-400">${item.Prioridad || 'Media'}</span>
+              <span class="text-[11px] px-2 py-0.5 rounded-full ${badgeStyle}">${item.Estado === 'Hecho' ? 'Resuelto' : dias + ' días activo'}</span>
+              
+              <!-- Selector de cambio de estado rápido -->
+              <select onchange="cambiarEstadoTarea('${item.Tema || item.ID}', this.value)" class="text-[11px] bg-white border border-outline-variant rounded px-1 py-0.5 focus:outline-none focus:ring-1 focus:ring-secondary cursor-pointer">
+                <option value="To Do" ${item.Estado === 'To Do' ? 'selected' : ''}>To Do</option>
+                <option value="En Proceso" ${item.Estado === 'En Proceso' ? 'selected' : ''}>En Proceso</option>
+                <option value="Bloqueado" ${item.Estado === 'Bloqueado' ? 'selected' : ''}>Bloqueado</option>
+                <option value="Hecho" ${item.Estado === 'Hecho' ? 'selected' : ''}>Hecho</option>
+              </select>
             </div>
-            <h4 class="text-sm font-semibold text-primary mb-1 leading-tight">${item.Tema}</h4>
+            <h4 class="text-sm font-semibold text-primary mb-1 leading-tight ${item.Estado === 'Hecho' ? 'line-through text-stone-400' : ''}">${item.Tema}</h4>
             <p class="text-[11px] text-stone-400 mb-3">Mando: <span class="text-stone-700 font-medium">${item.Mando}</span></p>
             
-            ${notaCondicional}
+            ${item.Estado === 'Hecho' ? '' : notaCondicional}
           </div>
         `;
 
@@ -608,13 +637,47 @@
         if(destino === 'inprogress') colProgress.insertAdjacentHTML('beforeend', tarjetaHTML);
         if(destino === 'naranja') colNaranja.insertAdjacentHTML('beforeend', tarjetaHTML);
         if(destino === 'roja') colRoja.insertAdjacentHTML('beforeend', tarjetaHTML);
+        if(destino === 'hecho') colHecho.insertAdjacentHTML('beforeend', tarjetaHTML);
       });
 
-      // Actualizar contadores de las columnas
+      // Actualizar contadores de las 5 columnas
       document.getElementById('badge-count-todo').textContent = cuentas.todo;
       document.getElementById('badge-count-inprogress').textContent = cuentas.inprogress;
       document.getElementById('badge-count-naranja').textContent = cuentas.naranja;
       document.getElementById('badge-count-roja').textContent = cuentas.roja;
+      document.getElementById('badge-count-hecho').textContent = cuentas.hecho;
+    }
+
+    // FUNCIÓN DE ACTUALIZACIÓN: Cambiar estado desde la tarjeta y guardarlo en Google Sheets
+    async function cambiarEstadoTarea(identificadorTema, nuevoEstado) {
+      // 1. Actualizar el estado en el dataset local de la memoria para que el cambio sea instantáneo en UI
+      const index = dataset.findIndex(t => (t.Tema === identificadorTema || t.ID === identificadorTema));
+      if (index !== -1) {
+        dataset[index].Estado = nuevoEstado;
+        // Si se pasa a 'Hecho', detenemos visualmente el contador fijándolo en lo que tuviera o 0
+        if(nuevoEstado === 'Hecho') dataset[index].DiasEstancado = dataset[index].DiasEstancado || 0;
+        procesarYRenderizarTodo();
+      }
+
+      // 2. Enviar la petición de actualización real al backend en Google Sheets
+      if (!SCRIPT_DB_URL.includes("REMPLAZA_CON_TU_URL")) {
+        try {
+          await fetch(SCRIPT_DB_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "update",
+              tema: identificadorTema, // El script usará este título para buscar la fila exacta
+              estado: nuevoEstado
+            })
+          });
+          // Opcional: recargar del servidor para asegurar sincronización limpia
+          adquirirDatosDeGoogleSheets();
+        } catch (err) {
+          console.error("Error al sincronizar el cambio de estado con Google Sheets:", err);
+        }
+      }
     }
 
     // FORMULARIO POST: Enviar nueva tarea a la API de Google Sheets
