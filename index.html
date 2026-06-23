@@ -107,9 +107,16 @@
           <p class="font-label-sm text-label-sm text-on-surface-variant">Executive Suite</p>
         </div>
       </div>
-      <button onclick="prepararNuevoRegistro()" class="mt-md w-full bg-primary text-on-primary font-label-bold text-label-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm">
-        <span class="material-symbols-outlined text-sm">add</span> Registrar Tema
-      </button>
+      
+      <!-- BOTONES DE ACCIÓN PRINCIPALES -->
+      <div class="flex flex-col gap-2 mt-md">
+        <button onclick="prepararNuevoRegistro()" class="w-full bg-primary text-on-primary font-label-bold text-label-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm text-xs">
+          <span class="material-symbols-outlined text-sm">add</span> Registrar Tema
+        </button>
+        <button onclick="abrirModalMando()" class="w-full bg-surface-container-high border border-outline-variant text-on-surface font-label-bold text-label-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container-highest transition-colors text-xs shadow-sm">
+          <span class="material-symbols-outlined text-sm">person_add</span> Añadir Mando
+        </button>
+      </div>
     </div>
     <ul class="flex-1 flex flex-col gap-1">
       <li>
@@ -126,12 +133,12 @@
       </li>
     </ul>
     <div class="mt-auto pt-md border-t border-outline-variant text-xs text-stone-400 px-3">
-      FlowState OS v2.2 (Live Teams)
+      FlowState OS v2.3 (Live Management)
     </div>
   </nav>
 
   <!-- MENÚ INFERIOR (MOBILE) -->
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-lowest border-t border-outline-variant z-50 flex justify-around items-center h-16 pb-safe">
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-lowest border-t border-outline-variant z-40 flex justify-around items-center h-16 pb-safe">
     <button onclick="navegarA('pantalla-dashboard')" class="flex flex-col items-center justify-center w-full h-full text-secondary font-bold">
       <span class="material-symbols-outlined">dashboard</span>
       <span class="text-[10px] mt-1 font-medium">Dashboard</span>
@@ -140,9 +147,9 @@
       <span class="material-symbols-outlined">view_kanban</span>
       <span class="text-[10px] mt-1 font-medium">Kanban</span>
     </button>
-    <button onclick="prepararNuevoRegistro()" class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant">
-      <span class="material-symbols-outlined">add_box</span>
-      <span class="text-[10px] mt-1 font-medium">Nuevo</span>
+    <button onclick="abrirModalMando()" class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant">
+      <span class="material-symbols-outlined">person_add</span>
+      <span class="text-[10px] mt-1 font-medium">Mando</span>
     </button>
   </nav>
 
@@ -200,7 +207,7 @@
             <span class="material-symbols-outlined text-sm text-primary">groups</span> Eficiencia de Cierre por Mando Intermedio
           </span>
           <div id="contenedor-medias-mandos" class="grid grid-cols-2 sm:grid-cols-5 gap-sm flex-1 items-center">
-            <!-- Inyectado dinámicamente de forma 100% interactiva -->
+            <!-- Inyectado dinámicamente -->
           </div>
         </div>
       </div>
@@ -278,9 +285,7 @@
       </div>
 
       <div class="flex-1 overflow-x-auto overflow-y-hidden kanban-scrollbar bg-surface-bright px-margin-mobile md:px-margin-desktop py-md">
-        
         <div id="tablero-estructura-estados" class="flex gap-md h-full min-w-max items-start">
-          <!-- Columna: To Do -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low rounded-t-xl">
               <h3 class="font-label-bold text-on-surface uppercase tracking-wider text-xs">To Do</h3>
@@ -288,7 +293,6 @@
             </div>
             <div id="col-kanban-todo" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
-          <!-- Columna: In Progress -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low rounded-t-xl">
               <h3 class="font-label-bold text-on-surface uppercase tracking-wider text-xs">En Proceso</h3>
@@ -296,7 +300,6 @@
             </div>
             <div id="col-kanban-inprogress" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
-          <!-- Columna: Alerta Naranja -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-[#fff7ed] rounded-t-xl">
               <h3 class="font-label-bold text-amber-800 uppercase tracking-wider text-xs">Alerta Naranja (>7d)</h3>
@@ -304,7 +307,6 @@
             </div>
             <div id="col-kanban-naranja" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
-          <!-- Columna: Bloqueado Crítico -->
           <div class="w-72 flex flex-col h-full bg-[#fff1f2] rounded-xl border border-error-container shadow-md shrink-0">
             <div class="p-4 border-b border-error-container flex justify-between items-center bg-[#ffe4e6] rounded-t-xl">
               <h3 class="font-label-bold text-error uppercase tracking-wider text-xs font-bold">Bloqueado / Crítico</h3>
@@ -312,7 +314,6 @@
             </div>
             <div id="col-kanban-roja" class="p-3 flex-1 overflow-y-auto space-y-3 content-start"></div>
           </div>
-          <!-- Columna: Hecho -->
           <div class="w-72 flex flex-col h-full bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm shrink-0 border-l-4 border-emerald-500">
             <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-[#f0fdf4] rounded-t-xl">
               <h3 class="font-label-bold text-emerald-800 uppercase tracking-wider text-xs">Hecho / Resuelto</h3>
@@ -326,7 +327,7 @@
       </div>
     </main>
 
-    <!-- ==================== PANTALLA 3: FORMULARIO ==================== -->
+    <!-- ==================== PANTALLA 3: FORMULARIO TAREAS ==================== -->
     <main id="pantalla-formulario" class="hidden flex-1 overflow-y-auto bg-surface-container-lowest flex justify-center py-xl px-margin-mobile md:px-margin-desktop">
       <div class="w-full max-w-2xl bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant p-lg md:p-xl h-fit">
         <div class="flex justify-between items-start mb-lg border-b border-outline-variant pb-md">
@@ -350,7 +351,7 @@
               <label class="font-label-bold text-on-surface" for="task-manager">Mando Intermedio Responsable</label>
               <div class="relative">
                 <select class="w-full bg-surface-bright border border-outline-variant rounded-lg px-sm py-sm text-body-md focus:ring-1 focus:ring-secondary outline-none appearance-none cursor-pointer" id="task-manager">
-                  <!-- Se rellena de forma dinámica desde Google Sheet -->
+                  <!-- Se inyecta dinámicamente -->
                 </select>
                 <span class="material-symbols-outlined absolute right-sm top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-sm">expand_more</span>
               </div>
@@ -423,13 +424,38 @@
 
   </div>
 
+  <!-- ==================== NUEVO: VENTANA MODAL FLOTANTE PARA CREAR MANDO ==================== -->
+  <div id="modal-alta-mando" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+    <div class="bg-surface-container-lowest rounded-2xl shadow-xl border border-outline-variant max-w-sm w-full p-6 relative">
+      <div class="flex justify-between items-start mb-4">
+        <div class="flex items-center gap-2 text-primary">
+          <span class="material-symbols-outlined">person_add</span>
+          <h3 class="text-sm font-bold">Dar de alta Mando Intermedio</h3>
+        </div>
+        <button onclick="cerrarModalMando()" class="text-stone-400 hover:text-error transition-colors">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+      <p class="text-xs text-stone-500 mb-4 leading-relaxed">El nombre se agregará dinámicamente a la base de datos de Injusa y se crearán sus paneles analíticos.</p>
+      
+      <div class="space-y-4">
+        <div class="flex flex-col gap-1">
+          <label class="text-[10px] font-bold text-stone-600 uppercase tracking-wide">Nombre Completo</label>
+          <input type="text" id="input-nombre-mando" placeholder="Ej: Luis Ferri" class="w-full bg-surface-bright border border-outline-variant rounded-lg px-3 py-2 text-xs focus:ring-1 focus:ring-secondary focus:outline-none">
+        </div>
+        <div class="flex gap-sm justify-end pt-2">
+          <button onclick="cerrarModalMando()" class="px-4 py-2 rounded-lg border border-outline-variant text-stone-600 text-xs font-semibold hover:bg-stone-50 transition-all">Cancelar</button>
+          <button onclick="ejecutarCrearMandoBackend()" class="px-4 py-2 rounded-lg bg-primary text-on-primary text-xs font-semibold hover:brightness-95 transition-all shadow-sm">Guardar Mando</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== CONTROLADOR CENTRAL JAVASCRIPT ==================== -->
   <script>
-    const SCRIPT_DB_URL = "https://script.google.com/macros/s/AKfycbysmm4alStkd5QmLQTSXlQQPq27n2sUdbDM1GytgUi4WvfuFxnhQrxTr7eXukcfj4InBA/exec";
-
     let dataset = [];
     let metricasResolucion = { mediaGlobal: 0, mediaPorMando: {} };
-    let mandosCompañia = []; // NUEVO: Lista dinámica de mandos descargada en vivo
+    let mandosCompañia = []; 
     let modoEdicion = false;
     let tareaEdicionOriginal = null;
     let perspectivaActiva = "estados"; 
@@ -454,6 +480,41 @@
       } else if (idPantalla === 'pantalla-kanban') {
         btnDash.className = "w-full flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all";
         btnKanban.className = "w-full flex items-center gap-3 px-3 py-2 text-on-secondary-fixed-variant bg-secondary-fixed rounded-lg transition-all";
+      }
+    }
+
+    // CONTROLADORES DEL MODAL DE MANDO
+    function abrirModalMando() {
+      document.getElementById('input-nombre-mando').value = '';
+      document.getElementById('modal-alta-mando').classList.remove('hidden');
+    }
+    function cerrarModalMando() {
+      document.getElementById('modal-alta-mando').classList.add('hidden');
+    }
+
+    // ACCIÓN POST: GUARDAR NUEVO MANDO EN GOOGLE SHEETS
+    async function ejecutarCrearMandoBackend() {
+      const nombre = document.getElementById('input-nombre-mando').value.trim();
+      if (!nombre) { alert("Por favor, introduce el nombre del mando."); return; }
+
+      // Bloqueo visual preventivo
+      cerrarModalMando();
+
+      try {
+        await fetch(SCRIPT_DB_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "createMando",
+            nombreMando: nombre
+          })
+        });
+        
+        // Esperamos un instante a que Google asiente el registro y refrescamos todo de forma invisible
+        setTimeout(adquirirDatosDeGoogleSheets, 800);
+      } catch (err) {
+        console.error("Error al registrar el mando intermedio:", err);
       }
     }
 
@@ -505,7 +566,7 @@
         if (respuestaServidor && Array.isArray(respuestaServidor.tareas)) {
           dataset = respuestaServidor.tareas;
           metricasResolucion = respuestaServidor.metricas || { mediaGlobal: 0, mediaPorMando: {} };
-          mandosCompañia = respuestaServidor.mandos || ["Sin Asignar"]; // Captura en vivo de mandos
+          mandosCompañia = respuestaServidor.mandos || [];
           procesarYRenderizarTodo();
         } else {
           inyectarDatosMock();
@@ -522,16 +583,13 @@
       renderizarTableroKanban();
     }
 
-    // ACTUALIZA LOS SELECTORES BASÁNDOSE EXCLUSIVAMENTE EN LA HOJA "RESPONSABLES"
     function actualizarFiltrosYSelectores() {
-      // 1. Selector de filtro del Kanban
       const selectKanban = document.getElementById('filtro-kanban-mando');
       selectKanban.innerHTML = '<option value="all">Todos los Mandos Intermedios</option>';
       mandosCompañia.forEach(mando => {
         selectKanban.insertAdjacentHTML('beforeend', `<option value="${mando}">${mando}</option>`);
       });
 
-      // 2. Selector del formulario de altas/edición
       const selectFormulario = document.getElementById('task-manager');
       selectFormulario.innerHTML = '<option value="Sin Asignar">Selecciona responsable...</option>';
       mandosCompañia.forEach(mando => {
@@ -550,7 +608,6 @@
 
       document.getElementById('kpi-media-global').textContent = metricasResolucion.mediaGlobal || 0;
       
-      // Renderizar cuadrícula de eficiencias filtrada dinámicamente por la pestaña Responsables
       const contenedorMandos = document.getElementById('contenedor-medias-mandos');
       contenedorMandos.innerHTML = '';
       
@@ -599,7 +656,6 @@
         `);
       }
 
-      // Gráfico dinámico basado en la lista Responsables
       const sumaDiasPorMando = {};
       const conteoTareasPorMando = {};
       
@@ -623,7 +679,7 @@
 
       const contGrafico = document.getElementById('grafico-barras-mandos');
       contGrafico.innerHTML = '';
-      const maxPromedio = Math.max(...Object.values(promediosPorMando), 5); 
+      const maxPromedio = Math.max(...Object.values(promediosPorMando), 5);
 
       mandosCompañia.forEach(mando => {
         const promedioDias = promediosPorMando[mando];
@@ -637,9 +693,9 @@
         contGrafico.insertAdjacentHTML('beforeend', `
           <div class="flex-1 flex flex-col items-center justify-end z-10 group h-full relative">
             <span class="font-label-bold text-xs mb-1 text-slate-700 font-bold tracking-tight">${promedioDias} d</span>
-            <div class="w-full max-w-[36px] ${colorBarra} rounded-t-sm transition-all shadow-sm relative group-hover:brightness-95 cursor-help" 
+            <div class="w-full max-w-[36px] ${colorBarra} rounded-t-sm transition-all shadow-sm cursor-help" 
                  style="height: ${alturaPct}%"
-                 title="${mando}: ${promedioDias} días de retraso medio sobre ${numTareasAbiertas} tareas abiertas.">
+                 title="${mando}: ${promedioDias} días medios en ${numTareasAbiertas} tareas.">
             </div>
             <span class="font-label-bold text-[11px] text-on-surface-variant truncate w-full text-center mt-2">${mando.split(' ')[0]}</span>
           </div>
@@ -719,7 +775,6 @@
       document.getElementById('badge-count-hecho').textContent = cuentas.hecho;
     }
 
-    // PERSPECTIVA MANDOS: Mapeado dinámico basado al 100% en la pestaña del Excel
     function renderizarKanbanPorMandosIntermedios() {
       const contenedorTablero = document.getElementById('tablero-estructura-mandos');
       contenedorTablero.innerHTML = '';
@@ -933,7 +988,7 @@
       document.getElementById('task-date').value = dateObj.toISOString().substring(0, 10);
 
       const prioridadRadios = document.getElementsByName('priority');
-      prioridadRadios.forEach(radio => { radio.checked = (radio.value === item.Prioridad); });
+      prioridadRadires.forEach(radio => { radio.checked = (radio.value === item.Prioridad); });
 
       const estadoRadios = document.getElementsByName('status');
       estadoRadios.forEach(radio => { radio.checked = (radio.value === item.Estado); });
@@ -974,7 +1029,7 @@
         }
         
         procesarYRenderizarTodo();
-        navegarA('pantalla-dashboard');
+        navegarA('pantalla-kanban');
 
         try {
           await fetch(SCRIPT_DB_URL, {
