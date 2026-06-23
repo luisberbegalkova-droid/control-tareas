@@ -1,0 +1,29 @@
+{
+	"folders": [
+		{
+			"path": "../kova-crm/kova-crm"
+		},
+		{
+			"path": "../App-Contenido"
+		},
+		{
+			"path": "../App-Inventario"
+		},
+		{
+			"path": "../App-12W"
+		},
+		{
+			"path": "../Luis-Launchpad"
+		},
+		{
+			"path": "../App-CRM-INJUSA"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../injusa-simulador-impacto-pedidos"
+		}
+	],
+	"settings": {}
+}
